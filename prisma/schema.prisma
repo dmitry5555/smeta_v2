@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id        Int   @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role 		String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  fields	Doc[]
+}
+
+
+model Doc {
+  id        Int   @id @default(autoincrement())
+  show		Boolean @default(true)
+//   type      String 	// base template, template, document
+  dog_num	String @default("")
+  userId	Int
+  user		Users	@relation(fields: [userId], references: [id])
+  fields	Field[]
+  koefs     Koef[]
+  name		String @default("Новый заказ")
+  description String @default("")
+  project	String @default("")
+  location	String @default("")
+  client	String @default("")
+  phone1	String @default("")
+  koef1		Float @default(1.2)
+  koef2		Float @default(1.1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Field {
+  id        Int   @id @default(autoincrement())
+  code	  	String
+  secured	Boolean @default(false)
+  doc 		Doc 	@relation(fields: [docId], references: [id])
+  docId	 	Int
+  name      String
+  measure   String
+  value		Float
+  price		Float
+  finalKoef	Float @default(1)
+//   koef		Float @default(1)
+  fixed_id	String @default("")
+  koef_code String @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Koef {
+  id        Int   @id @default(autoincrement())
+  koef_code	String@default("")
+  name      String
+  value		Float
+  is_divider Boolean @default(false)
+  doc       Doc   @relation(fields: [docId], references: [id])
+  docId     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
