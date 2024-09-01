@@ -62,6 +62,7 @@ model Field {
   value		Float
   price		Float
   finalKoef	Float @default(1)
+  valueNoKoef	Float @default(0)
 //   koef		Float @default(1)
   fixed_id	String @default("")
   koef_code String @default("")

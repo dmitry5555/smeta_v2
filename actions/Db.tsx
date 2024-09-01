@@ -189,6 +189,7 @@ export const dbUpdateProjectInfo = async (project: any, editor_id: any) => {
 				value: field.value,
 				price: field.price,
 				finalKoef: field.finalKoef,
+				valueNoKoef: field.valueNoKoef,
 				updatedAt: new Date()
 				// Добавьте другие обновляемые поля здесь
 			  }

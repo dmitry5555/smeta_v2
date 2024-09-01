@@ -9,7 +9,7 @@ import Koef from './Koef'
 
 
 const Order = ({proj_id, user_id}: any) => { 
-
+	const [visibleKoefs, setVisibleKoefs] = useState<{ [key: string]: boolean }>({});
 	const [formChanged, setFormChanged] = useState(false)
 	const [isProjectInfoOpen, setProjectInfoOpen] = useState(true)
 	const [projectInfo, setProjectInfo] = useState<any | null>(null)
@@ -17,6 +17,13 @@ const Order = ({proj_id, user_id}: any) => {
 	const [docKoefs, setDocKoefs] = useState<any | null>(null)
 	const [sums, setSums] = useState<any | null>(null)
 	
+	const toggleKoefsVisibility = (positionId: string) => {
+		setVisibleKoefs((prevState) => ({
+		  ...prevState,
+		  [positionId]: !prevState[positionId],
+		}));
+	};
+	  
 	useEffect(() => {
 		const fetchFields = async () => {
 		  	const data = await dbGetProject(proj_id)
@@ -73,17 +80,140 @@ const Order = ({proj_id, user_id}: any) => {
 		handleInputChange();
 	}
 
-	
+	// при смене позиции обновляем ее в базе
+	// также ищем все связанные позиции (и перемножаем их индивидуальный фин. коэф-т)
 	const handlePosChange = (id: number, fixed_id: string, measure: string, name: string, value: number, price: number) => {
-		
-		// рассчитываем нужные суммы обновленных позиций, на которые повлияет текущая позиция
+		// если позиция влияет на другие - задаем связи
+		let upd_pos: string[] = []
+		// если меняем Х то пересчитывается и ...
+		// if (fixed_id == '1_1') { upd_pos = ['1_2', '1_3', '1_4', '1_5', '1_6', '1_7', '1_8'] } // фундамент
+		// else if (fixed_id == '3_1') { upd_pos = ['2_1'] } // монтаж обв бруса
+		// else if (fixed_id == '2_3') { upd_pos = ['2_3','2_4'] } // сборка бруса
+
+		// 
 		setPositions((positions: any[]) => {
 			return positions.map((pos: any) => {
+				// обновляем саму позицию
 				if (pos.id === id) {
 					return { ...pos, measure, name, value, price }
 				}
 
-				return pos;
+				// перебираем все другие позиции 
+				// фундамент
+				if (fixed_id === '1_1' && ['1_2', '1_3', '1_4', '1_5', '1_6', '1_7', '1_8'].includes(pos.fixed_id) ) {
+					return { ...pos, value: value }
+				}
+
+				// кл брус - 1 позиция
+				if ((fixed_id === '3_1') && ['2_1'].includes(pos.fixed_id) ) {
+					return { ...pos, value: value }
+				}
+
+				// обвяз брус - 2 позиции, сумма
+				if ((fixed_id === '3_3') && ['2_2'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_4')
+					return { ...pos, value: value + pos2.value }
+				}
+				if ((fixed_id === '3_4') && ['2_2'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_3')
+					return { ...pos, value: value + pos2.value }
+				}
+
+				// обвяз брус + лаги - в антисептирование, сумма
+				if ((fixed_id === '3_1') && ['2_4'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_14')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_15')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
+					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				}
+				if ((fixed_id === '3_14') && ['2_4'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_15')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
+					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				}
+				if ((fixed_id === '3_15') && ['2_4'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
+					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				}
+				if ((fixed_id === '3_16') && ['2_4'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_15')
+					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				}
+				
+				// кровля стропилы + контробрешетки + обрешетки   -  в антисеп
+				if ((fixed_id === '5_1') && ['4_11'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '5_2')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '5_3')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '5_4')
+					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				}
+				if ((fixed_id === '5_2') && ['4_11'].includes(pos.fixed_id) ) {
+					// сумма двух позиций
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '5_1')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '5_3')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '5_4')
+					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				}
+				if ((fixed_id === '5_3') && ['4_11'].includes(pos.fixed_id) ) {
+					// сумма двух позиций
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '5_1')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '5_2')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '5_4')
+					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				}
+				if ((fixed_id === '5_4') && ['4_11'].includes(pos.fixed_id) ) {
+					// сумма двух позиций
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '5_1')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '5_2')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '5_3')
+					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				}
+
+				// фасад Подшив свесов кровли , копия в шлифовку
+				if ((fixed_id === '6_1') && ['6_3'].includes(pos.fixed_id) ) {
+					return { ...pos, value: value }
+				}
+				// Монтаж лобовых досок , копия в шлифовку
+				if ((fixed_id === '6_2') && ['6_4'].includes(pos.fixed_id) ) {
+					return { ...pos, value: value }
+				}
+				
+				// КОЭФФИЦИЕНТЫ
+				// сохранить temp_val
+				// сохранить value * finalKoef
+				
+				// фасад - расх материалы ( сумма шлифовок )
+				if ((fixed_id === '6_1') && ['7_3'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_2')
+					return { ...pos, value: (value + pos2.value) }
+				}
+				// Монтаж лобовых досок , копия в шлифовку
+				if ((fixed_id === '6_2') && ['7_3'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_1')
+					return { ...pos, value:(value + pos2.value) }
+				}
+	
+				// коэффициенты k7_1_doska
+				// доска - сумма шлифовок x 0.02 x 1.2
+				if ((fixed_id === '6_1') && ['7_1'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_2')
+					return { ...pos, valueNoKoef: (value + pos2.value), value: (value + pos2.value) * pos.finalKoef }
+				}
+				if ((fixed_id === '6_2') && ['7_1'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_1')
+					return { ...pos, valueNoKoef:(value + pos2.value), value: (value + pos2.value) * pos.finalKoef }
+				}
+
+				// окраска фасада k7_2_okraska
+
+				
+
+				return pos
 			})
 		});
 		handleInputChange();
@@ -91,43 +221,65 @@ const Order = ({proj_id, user_id}: any) => {
 
 	const handleKoefChange = (id: number, pos_id: number, koef_code: string, value: any) => {
 		let updatedKoefs: any[] = [];
-		let updatedPositions: any[] = [];
-	
+		
+		console.log('id', id, 'pos_id', pos_id, 'koef_code', koef_code, 'value', value)
 		// обновляем имя или значение кэфа
 		setDocKoefs((koefs: any[]) => {
 			updatedKoefs = koefs.map((koef: any) => {
 				if (koef.id === id) {
+					// console.log('that_koef:', koef)
 					if (typeof value === 'number') {
-						return { ...koef, value };
+						return { ...koef, value: value };
 					} else {
 						return { ...koef, name: value };
 					}
 				}
 				return koef;
 			});
+
+			if (typeof value === 'number') {
+				const newKoef: number = updatedKoefs
+					.filter((koef: any) => koef.koef_code === koef_code)
+					.reduce((finalKoef: number, koef: any) => {
+						if (koef.is_divider ) {
+							if (koef.value === 0) return 0;
+							return finalKoef / koef.value;
+						} else {
+							return finalKoef * koef.value;
+						}
+					}, 1)
+
+				setPositions((positions: any[]) => {
+					return positions.map((pos: any) => {
+						if (pos.id === pos_id) {
+							return { ...pos, value: pos.valueNoKoef * newKoef, finalKoef: newKoef }
+						}
+						return pos;
+					})
+				})
+			}
+
 			return updatedKoefs;
 		});
-		if (typeof value === 'number') {
-			setPositions((positions: any[]) => {
-				const final_kef = 1
-				// если код коэф-та такой то -то value берется из позиции Х
-				// иначе - код по умолчанию
-				// if (koef_code === 'test') {
-				// 	// const pos = positions.find((pos:any) => pos.id === id)
-				// 	// final_kef * 
-				// 	// alert(pos.value * value)
-				// 	// Add your code here to handle the 'test' case
-				// }
-				// в ином случае просто 
-				return positions.map((pos) =>
-					pos.id === pos_id ? { ...pos, value: value } : pos
-				);
-			});
-		}
-	
+
 		handleInputChange();
 	};
-	
+
+	// для коэф. ФИКС расход, фикс К1, К2  = используются в рассчетах ИТОГО
+	const handleKoefChangeByName = (name: string, value: any) => {
+		let updatedKoefs: any[] = [];
+		setDocKoefs((koefs: any[]) => {
+			updatedKoefs = koefs.map((koef: any) => {
+				if (koef.name === name) {
+					return { ...koef, value };
+				}
+				return koef;
+			});
+			return updatedKoefs;
+		});		
+		handleInputChange();
+	}
+
 	useEffect(() => {
 		if(positions) {
 
@@ -391,11 +543,14 @@ const Order = ({proj_id, user_id}: any) => {
 				{positions && positions.filter((position: any) => position.code == 1).map((position: any, index: any) => (
 				<div key={position.id}>
 					<Position 
-						position={position} 
+						docKoefs={docKoefs}
+						position={position}
 						handlePosChange={handlePosChange}
 						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
 					/>
-					{docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
 						key={koef.id}
@@ -404,7 +559,7 @@ const Order = ({proj_id, user_id}: any) => {
 					/>
 					))}
 				</div>
-			))}
+				))}
 
 					
 				{positions && sums && 
@@ -465,7 +620,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 2).map((position: any, index: any) => (
-					<Position positions={positions} docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />	
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				{/* <Position key={generateUniqueId()} position={{ ...emptyPos, id: generateUniqueId() , code: 2 }} handlePosChange={handlePosChange} /> */}
@@ -488,7 +660,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 3).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(3)}>+</button>
 
@@ -515,7 +704,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 4).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(4)}>+</button>
@@ -536,7 +742,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 5).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(5)}>+</button>
@@ -697,7 +920,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 6).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />	
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(6)}>+</button>
@@ -719,7 +959,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 7).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(7)}>+</button>
@@ -751,7 +1008,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 8).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />	
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 				
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(8)}>+</button>
@@ -773,7 +1047,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 9).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(9)}>+</button>
@@ -804,7 +1095,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 10).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />	
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(10)}>+</button>
@@ -824,8 +1132,25 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 11).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`}
-/>				))}
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
+				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(11)}>+</button>
 				{positions && sums && 
@@ -863,7 +1188,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 12).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(12)}>+</button>
@@ -882,7 +1224,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 13).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(13)}>+</button>
@@ -911,7 +1270,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 14).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(14)}>+</button>
@@ -931,7 +1307,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 15).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(15)}>+</button>
@@ -969,7 +1362,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 16).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(16)}>+</button>
@@ -989,7 +1399,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 17).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(17)}>+</button>
@@ -1019,7 +1446,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 18).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(18)}>+</button>
@@ -1039,7 +1483,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 19).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(19)}>+</button>
@@ -1069,7 +1530,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 20).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(20)}>+</button>
@@ -1089,7 +1567,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 21).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(21)}>+</button>
@@ -1120,7 +1615,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 27).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(27)}>+</button>
@@ -1140,7 +1652,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 28).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(28)}>+</button>
@@ -1178,7 +1707,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 22).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(22)}>+</button>
@@ -1198,7 +1744,24 @@ const Order = ({proj_id, user_id}: any) => {
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 23).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(23)}>+</button>
@@ -1230,7 +1793,24 @@ const Order = ({proj_id, user_id}: any) => {
 					<div className='mx-auto'>Доставка материалов </div>
 				</div>
 				{positions && positions.filter((position: any) => position.code == 24).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(24)}>+</button>
 				{positions && sums && 
@@ -1247,7 +1827,24 @@ const Order = ({proj_id, user_id}: any) => {
 					<div className='mx-auto'>Проживание, питание </div>
 				</div>
 				{positions && positions.filter((position: any) => position.code == 25).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(25)}>+</button>
 				
@@ -1265,7 +1862,24 @@ const Order = ({proj_id, user_id}: any) => {
 					<div className='mx-auto'>Скидки</div>
 				</div>
 				{positions && positions.filter((position: any) => position.code == 26).map((position: any, index: any) => (
-					<Position docKoefs={docKoefs} handleKoefChange={handleKoefChange} key={position.id} position={position} handlePosChange={handlePosChange} uniqueId={`${position.code}-${index + 1}`} />
+				<div key={position.id}>
+					<Position 
+						docKoefs={docKoefs}
+						position={position}
+						handlePosChange={handlePosChange}
+						uniqueId={`${position.code}_${index + 1}`} 
+						toggleKoefsVisibility={toggleKoefsVisibility}
+						isKoefsVisible={visibleKoefs[position.id] || false}
+					/>
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					<Koef 
+						handleKoefChange={handleKoefChange}
+						key={koef.id}
+						koef={koef}
+						pos_id={position.id}
+					/>
+					))}
+				</div>
 				))}
 				<button className='flex flex-row w-full pl-8 py-4 border border-t-0 text-sm text-gray-400 hover:text-gray-800' onClick={() => createPosition(26)}>+</button>
 				

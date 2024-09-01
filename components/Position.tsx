@@ -1,7 +1,7 @@
 import { AdjustmentsHorizontalIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
-const Position = ({ docKoefs, handleKoefChange, position, handlePosChange, uniqueId }: any) => {
+const Position = ({ docKoefs, position, handlePosChange, uniqueId, toggleKoefsVisibility, isKoefsVisible }: any) => {
 
 	const [measure, setMeasure] = useState( position.measure )
 	const [price, setPrice] = useState( Number(position.price) )
@@ -9,16 +9,18 @@ const Position = ({ docKoefs, handleKoefChange, position, handlePosChange, uniqu
 	const [value, setValue] = useState( Number(position.value) )
 	const [total, setTotal] = useState( Number((position.value * position.price).toFixed(0)))
 
+	const hasKoefs = docKoefs?.some((koef: any) => koef.koef_code === position.koef_code)
+
+	const handleToggleDocKoefs = () => {
+		toggleKoefsVisibility(position.id);
+	};
+
 	useEffect(() => {
 		setMeasure(position.measure);
 		setPrice(Number(position.price));
 		setName(position.name);
 		setValue(Number(position.value));
 		setTotal(Number((position.value * position.price).toFixed(0)));
-		// handlePosChange(position.id, position.fixed_id, position.measure, position.name, position.value, position.price)
-		// setValue(position.value * position.finalKoef)
-		// setValue(position.price * position.finalKoef)
-		// setTotal(Number((position.value * position.price * position.finalKoef).toFixed(0)));
 	}, [position]);
 
 	const handleMeasureChange = (e: any) => {
@@ -52,7 +54,7 @@ const Position = ({ docKoefs, handleKoefChange, position, handlePosChange, uniqu
 		'7_1', '7_2', '7_3', // Свесы кровли - Материалы
 		'9_1', '9_2', '9_3',  // Окраска фасада - Материалы
 
-		'10_3',  // Терраса - монтаж доски пода
+		// '10_3',  // Терраса - монтаж доски пода
 		'11_3',  // Доска пола лиственница
 		// '12_2', '12_3', '12_4', '12_5', // Утепления кровли
 		'13_1', '13_3', // окна - утеплитель 1 и 2
@@ -60,6 +62,7 @@ const Position = ({ docKoefs, handleKoefChange, position, handlePosChange, uniqu
 
 		'17_8', // УтеплительТехноблок Стандарт, 0,288 м3
 		'17_13', // фанера
+		'19_3',  // Межэтажное перекрытия - УтеплительТехноблок Стандарт, 0,288 м3
 		'19_5',  // Межэтажное перекрытия - УтеплительТехноблок Стандарт, 0,288 м3
 		'19_9',  // фанера
 
@@ -70,7 +73,7 @@ const Position = ({ docKoefs, handleKoefChange, position, handlePosChange, uniqu
 		'28_5', // антресоль - Утеплитель 2
 		'28_9', // антресоль - фанера
 
-		'23_2', // Межкомнатные перегородки
+		// '23_2', // Межкомнатные перегородки
 	]
 
 	return (
@@ -80,7 +83,7 @@ const Position = ({ docKoefs, handleKoefChange, position, handlePosChange, uniqu
 		<div className='flex flex-row w-full px-5 py-2 border border-t-0 text-sm -z-1' data-id={position.fixed_id} data-fixed-id={position.fixedId} data-unique-id={uniqueId}>
 			<div className='w-7/12 my-auto flex-row flex'>
 				<input onChange={handleNameChange} name='name' className='w-4/5 max-w-full py-2 px-3 rounded-lg  my-auto' type="text" defaultValue={position.name} />
-				<AdjustmentsHorizontalIcon className="w-5 mr-6 opacity-100 ml-auto cursor-pointer" />
+				{hasKoefs && <AdjustmentsHorizontalIcon className="w-5 mr-6 opacity-100 ml-auto cursor-pointer" onClick={handleToggleDocKoefs} />}
 			</div>
 			<div className='w-1/12 my-auto mx-1'>
 				<input onChange={handleMeasureChange} name='measure' className='w-20 max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={position.measure} />
@@ -90,7 +93,7 @@ const Position = ({ docKoefs, handleKoefChange, position, handlePosChange, uniqu
 					type="number"
 					readOnly={readOnlyIds.includes(uniqueId)}
 					step="any"
-					value={position.value * position.finalKoef}
+					value={position.value}
 					onKeyDown={(event) => {
 						if (!/[0-9.]/.test(event.key) && 
 							event.key !== 'Backspace' && 
@@ -121,7 +124,8 @@ const Position = ({ docKoefs, handleKoefChange, position, handlePosChange, uniqu
 				/>
 			</div>
 			<div className='w-1/12 my-auto flex-row flex'>
-				<input name="total" value={total} />
+				<div>{total}</div>
+				{/* <input name="total" value={total} /> */}
 			</div>
 			<div className='w-1/12 my-auto flex-row flex'>
 				{position.secured && <LockClosedIcon className="w-5 ml-auto text-gray-300" />}
