@@ -7,7 +7,7 @@ export default async function Home() {
 	if (!user_cook) { redirect('/login') }
 
 	const cloneDoc = async () => {
-		const data = await dbCloneDoc(1)
+		const data = await dbCloneDoc()
 		// console.log(data)
 		// setPositions(data?.fields)
 		// setProjectInfo(data)
