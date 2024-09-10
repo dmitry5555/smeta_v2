@@ -41,7 +41,7 @@ const Order = ({proj_id, user_id}: any) => {
 
 	const saveProject = async () => {
 		try {
-			setFormChanged(true)
+			setFormChanged(false)
 			const updateProject = await dbUpdateProjectInfo(projectInfo, user_id);
 			const updatePositions = await dbUpdatePositions(projectInfo.id, positions);
 			const updateKoefs = await dbUpdateKoefs(docKoefs);
