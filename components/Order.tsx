@@ -41,15 +41,14 @@ const Order = ({proj_id, user_id}: any) => {
 
 	const saveProject = async () => {
 		try {
+			setFormChanged(true)
 			const updateProject = await dbUpdateProjectInfo(projectInfo, user_id);
 			const updatePositions = await dbUpdatePositions(projectInfo.id, positions);
 			const updateKoefs = await dbUpdateKoefs(docKoefs);
-			
 			console.log('Project updated successfully:', updateProject);
 			console.log('Positions updated successfully:', updatePositions);
 			console.log('Koefs updated successfully:', updateKoefs);
 			window.location.href = `/project/${projectInfo.id}`;
-
 		} catch (error) {
 		  console.error('Error updating project:', error);
 		}
@@ -202,16 +201,113 @@ const Order = ({proj_id, user_id}: any) => {
 				// доска - сумма шлифовок x 0.02 x 1.2
 				if ((fixed_id === '6_1') && ['7_1'].includes(pos.fixed_id) ) {
 					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_2')
-					return { ...pos, valueNoKoef: (value + pos2.value), value: (value + pos2.value) * pos.finalKoef }
-				}
+					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
+				} 
 				if ((fixed_id === '6_2') && ['7_1'].includes(pos.fixed_id) ) {
 					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_1')
-					return { ...pos, valueNoKoef:(value + pos2.value), value: (value + pos2.value) * pos.finalKoef }
+					return { ...pos, valueNoKoef:(value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
 				}
 
-				// окраска фасада k7_2_okraska
+				// окраска фасада k7_2_okraska свесы кровли
+				if ((fixed_id === '6_1') && ['7_2'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_2')
+					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
+				}
+				if ((fixed_id === '6_2') && ['7_2'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_1')
+					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
+				}
 
+				// 9_1 окраска фасада - краска на фасад
+				if ((fixed_id === '8_1') && ['9_1'].includes(pos.fixed_id) ) {
+					return { ...pos, value: value }
+				}
+				// 9_2 окраска фасада - краска на перерубы 
+				if ((fixed_id === '8_2') && ['9_2'].includes(pos.fixed_id) ) {
+					return { ...pos, value: value }
+				}
+				// 9_3 расходники на окраску - сумма шлифовок
+				if ((fixed_id === '8_1') && ['9_3'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '8_2')
+					return { ...pos, value: (value + pos2.value) }
+				}
+				if ((fixed_id === '8_2') && ['9_3'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '8_1')
+					return { ...pos, value: (value + pos2.value) }
+				}
+				// 10_3 терраса - копия монтаж обрешетки на монтаж доски пола
+				if ((fixed_id === '10_2') && ['10_3'].includes(pos.fixed_id) ) {
+					return { ...pos, value: value }
+				}
+				if ((fixed_id === '10_2') && ['11_3'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}  
+				// утепление кровли 13_1 - 100  
+				if ((fixed_id === '12_1') && ['13_1'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// утепление кровли 13_2 - 50  
+				if ((fixed_id === '12_3') && ['13_3'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// монтаж отливов - копия 
+				if ((fixed_id === '15_7') && ['14_5'].includes(pos.fixed_id) ) {
+					return { ...pos, value: value }
+				}
+				// ПОЛЫ 1 ЭТ
+				// утепление полы 16_1 - 100  
+				if ((fixed_id === '16_5') && ['17_6'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// утепление кровли 16_7 - 50 
+				if ((fixed_id === '16_7') && ['17_8'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// полы 1 этаж - фанера
+				if ((fixed_id === '16_9') && ['17_13'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// МЕЖЕТАЖКНОЕ
+				// утепление  - 100  
+				if ((fixed_id === '18_3') && ['19_3'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// утепление  - 50 
+				if ((fixed_id === '18_5') && ['19_5'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// фанера
+				if ((fixed_id === '18_7') && ['19_9'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// ЧЕРДАЧНОЕ
+				// утепление  - 100  
+				if ((fixed_id === '20_3') && ['21_3'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// утепление  - 50 
+				if ((fixed_id === '20_5') && ['21_5'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// АНТРЕСОЛЬ
+				// утепление  - 100  
+				if ((fixed_id === '27_3') && ['28_3'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// утепление  - 50 
+				if ((fixed_id === '27_7') && ['28_5'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				// фанера
+				if ((fixed_id === '27_6') && ['28_9'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
+				//  МЕЖК ПЕРЕГОРОДКИ - уткплитель
+				if ((fixed_id === '22_2') && ['23_2'].includes(pos.fixed_id) ) {
+					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
+				}
 				
+
 
 				return pos
 			})
@@ -243,16 +339,16 @@ const Order = ({proj_id, user_id}: any) => {
 					.reduce((finalKoef: number, koef: any) => {
 						if (koef.is_divider ) {
 							if (koef.value === 0) return 0;
-							return finalKoef / koef.value;
+							return Math.round(finalKoef / koef.value * 100) / 100;
 						} else {
-							return finalKoef * koef.value;
+							return Math.round(finalKoef * koef.value * 100) / 100;
 						}
 					}, 1)
 
 				setPositions((positions: any[]) => {
 					return positions.map((pos: any) => {
 						if (pos.id === pos_id) {
-							return { ...pos, value: pos.valueNoKoef * newKoef, finalKoef: newKoef }
+							return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 100) / 100, finalKoef: newKoef }
 						}
 						return pos;
 					})
