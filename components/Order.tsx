@@ -629,13 +629,25 @@ const Order = ({proj_id, user_id}: any) => {
 					</div>
 				</div>
 
-			{/* Коробка  */}
+			{/* СКЕЛЕТОН */}
+			{!positions && [...Array(25)].map((_, index) => (
+				<div key={index} className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm -z-1'>
+					<div className='w-7/12 my-auto flex-row flex'>
+						<div className="rounded-l rounded-r bg-gray-200 h-5 w-1/2 animate-pulse"></div>
+					</div>
+					<div className='w-5/12 my-auto flex-row flex'>
+						<div className="rounded-l rounded-r bg-gray-200 h-5 w-3/4 animate-pulse "></div>
+					</div>
+				</div>
+      		))}
 
+			{/* Коробка  */}
+				
 				{/* 1. Этап — Фундамент */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 1 — Фундамент </div>
-				</div>
-				
+				</div> }
 				{positions && positions.filter((position: any) => position.code == 1).map((position: any, index: any) => (
 				<div key={position.id}>
 					<Position 
@@ -710,10 +722,10 @@ const Order = ({proj_id, user_id}: any) => {
 
 
 				{/* 2. Этап — Стеновой комплект */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 2 - Стеновой комплект</div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 2).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -750,11 +762,11 @@ const Order = ({proj_id, user_id}: any) => {
 
 				
 				{/* Этап 2 - Стеновой комплект - Материалы */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 2 - Стеновой комплект - Материалы</div>
-				</div>
-
+				</div>}
+				
 				{positions && positions.filter((position: any) => position.code == 3).map((position: any, index: any) => (
 				<div key={position.id}>
 					<Position 
@@ -794,10 +806,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 3 - Кровля */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 3 - Кровля</div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 4).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -832,10 +844,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 				
 				{/* Этап 3 - Кровля - Материалы */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 3 - Кровля - Материалы</div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 5).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1004,10 +1016,10 @@ const Order = ({proj_id, user_id}: any) => {
 				
 
 			{/* Фасад */}
-				
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Фасад</div>
-				</div>
+				</div>}
 
 				{/* Этап 1 - Свесы кровли работы  */}
 
@@ -1049,10 +1061,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 1 - Свесы кровли - Материалы  */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 1 - Свесы кровли - Материалы</div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 7).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1098,10 +1110,10 @@ const Order = ({proj_id, user_id}: any) => {
 
 
 				{/* Этап 2 - Окраска фасада   */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 2 - Окраска фасада </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 8).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1137,10 +1149,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 2 - Окраска фасада - Материалы */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 2 - Окраска фасада - Материалы</div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 9).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1185,10 +1197,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 3 - Терраса */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 3 - Терраса </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 10).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1222,10 +1234,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 3 - Терраса - Материалы */}
-
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 3 - Терраса - Материалы </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 11).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1274,14 +1286,16 @@ const Order = ({proj_id, user_id}: any) => {
 
 		
 			{/* Окна и утепления кровли */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Окна и утепления кровли </div>
-				</div>
+				</div>}
 				
 				{/* Этап 1 - Утепления кровли */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 1 - Утепления кровли </div>
-				</div>
+				</div> }
 
 				{positions && positions.filter((position: any) => position.code == 12).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1315,9 +1329,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 1 - Утепления кровли - Материалы */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 1 - Утепления кровли - Материалы </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 13).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1361,9 +1376,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 2 - Двери Окна */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 2 - Двери Окна </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 14).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1398,9 +1414,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 2 - Двери Окна - Материалы */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 2 - Двери Окна - Материалы  </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 15).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1448,9 +1465,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 			{/* Перекрытия */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Перекрытия </div>
-				</div>
+				</div>}
 			
 				{/* Этап 1 - Полы 1 этаж  */}
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
@@ -1490,9 +1508,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 1 - Полы 1 этаж -  Материалы */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 1 - Полы 1 этаж - Материалы  </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 17).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1537,9 +1556,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 				
 				{/* Этап 2 - Межэтажное перекрытия  */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 2 - Межэтажное перекрытия  </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 18).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1574,9 +1594,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 2 - Межэтажное перекрытия - Материалы */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 2 - Межэтажное перекрытия - Материалы  </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 19).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1621,9 +1642,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 3 - Чердачное перекрытия   */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 3 - Чердачное перекрытия  </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 20).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1658,9 +1680,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 3 - Чердачное перекрытия - Материалы */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 3 - Чердачное перекрытия - Материалы</div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 21).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1706,9 +1729,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 4 - Перекрытия антресоль */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 4 - Перекрытия антресоль </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 27).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1743,9 +1767,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 4 - Перекрытия антресоль */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 4 - Перекрытия антресоль - Материалы </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 28).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1793,14 +1818,16 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 			{/* Перегородки */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Перегородки </div>
-				</div>
+				</div>}
 
 				{/* Этап 1 - Межкомнатные перегородки   */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 1 - Межкомнатные перегородки  </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 22).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1835,9 +1862,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Этап 1 - Межкомнатные перегородки - Материалы */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Этап 1 - Межкомнатные перегородки - Материалы  </div>
-				</div>
+				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 23).map((position: any, index: any) => (
 				<div key={position.id}>
@@ -1881,13 +1909,15 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 			{/* Накладные расходы */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Накладные расходы </div>
+				</div>}
 				{/* Доставка материалов  */}
-				</div>
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Доставка материалов </div>
-				</div>
+				</div>}
 				{positions && positions.filter((position: any) => position.code == 24).map((position: any, index: any) => (
 				<div key={position.id}>
 					<Position 
@@ -1919,9 +1949,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* Проживание, питание */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Проживание, питание </div>
-				</div>
+				</div>}
 				{positions && positions.filter((position: any) => position.code == 25).map((position: any, index: any) => (
 				<div key={position.id}>
 					<Position 
@@ -1954,9 +1985,10 @@ const Order = ({proj_id, user_id}: any) => {
 				}
 
 				{/* СКИДКИ */}
+				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Скидки</div>
-				</div>
+				</div>}
 				{positions && positions.filter((position: any) => position.code == 26).map((position: any, index: any) => (
 				<div key={position.id}>
 					<Position 
