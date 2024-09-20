@@ -76,6 +76,7 @@ model Koef {
   name      String
   value		Float
   is_divider Boolean @default(false)
+  is_balancer Boolean @default(false)
   doc       Doc   @relation(fields: [docId], references: [id])
   docId     Int
   createdAt DateTime @default(now())
