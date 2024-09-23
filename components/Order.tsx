@@ -323,62 +323,75 @@ const Order = ({proj_id, user_id}: any) => {
 		handleInputChange();
 	}
 
-	const handleKoefChange = (id: number, pos_id: number, koef_code: string, is_balancer: boolean, value: any) => {
+	const handleKoefNameChange = (id: number, pos_id: number, koef_code: string, is_balancer: boolean, value: string) => {
 		let updatedKoefs: any[] = [];
 		
-		// console.log('id', id, 'pos_id', pos_id, 'koef_code', koef_code, 'value', value)
-		// обновляем имя или значение 1 кэфа
 		setDocKoefs((koefs: any[]) => {
 			updatedKoefs = koefs.map((koef: any) => {
 				if (koef.id === id) {
-					// console.log('that_koef:', koef)
-					if (typeof value === 'number') {
-						return { ...koef, value: value };
-					} else {
-						return { ...koef, name: value };
-					}
+					return { ...koef, name: value };
 				}
 				return koef;
 			});
 
-			if (typeof value === 'number') {
-				let hasBalancer = false
-				const newKoef: number = updatedKoefs
-				.filter((koef: any) => koef.koef_code === koef_code)
-				.reduce((finalKoef: number, koef: any) => {
-					if (koef.is_balancer) {
-						hasBalancer = true
-						return Math.round(finalKoef * 1 * 100) / 100;
-					}
-					if (koef.is_divider) {
-						if (koef.value === 0) return 0;
-						return Math.round(finalKoef / koef.value * 100) / 100;
-					}
-					return Math.round(finalKoef * koef.value * 100) / 100;
-				}, 1)
+			return updatedKoefs;
+		});
 
-				setPositions((positions: any[]) => {
-					return positions.map((pos: any) => {
-						if (pos.id === pos_id) {
-							// рассчитываем измененную позицию, в которой меняли кэфы
-							let balancerVal = 1
-							if (hasBalancer) {
-								if (is_balancer) {
-									// берем значение тек.инпута - он и есть балансер
-									balancerVal = value
-								} else {
-									// ищем балансер в группе кэфов
-									let balancer = docKoefs.find((koef: any) => koef.koef_code == koef_code && koef.is_balancer)
-									balancerVal = balancer.value
-								}
-								return { ...pos, value: Math.round( Math.ceil(pos.valueNoKoef * newKoef / balancerVal) * balancerVal * 100) / 100, finalKoef: newKoef }
+		handleInputChange();
+	};
+
+	const handleKoefChange = (id: number, pos_id: number, koef_code: string, is_balancer: boolean, value: any) => {
+		let updatedKoefs: any[] = [];
+
+		let newValue = value
+		if ( value !== '') {
+			newValue = parseFloat(value)
+		} 
+		
+		setDocKoefs((koefs: any[]) => {
+			updatedKoefs = koefs.map((koef: any) => {
+				if (koef.id === id) {
+					return { ...koef, value: newValue };
+				}
+				return koef;
+			});
+
+			let hasBalancer = false
+			const newKoef: number = updatedKoefs
+			.filter((koef: any) => koef.koef_code === koef_code)
+			.reduce((finalKoef: number, koef: any) => {
+				if (koef.is_balancer) {
+					hasBalancer = true
+					return Math.round(finalKoef * 1 * 100) / 100;
+				}
+				if (koef.is_divider) {
+					if (koef.value == 0 || koef.value == '') return 0;
+					return Math.round(finalKoef / koef.value * 100) / 100;
+				}
+				return Math.round(finalKoef * koef.value * 100) / 100;
+			}, 1)
+
+			setPositions((positions: any[]) => {
+				return positions.map((pos: any) => {
+					if (pos.id === pos_id) {
+						// рассчитываем измененную позицию, в которой меняли кэфы
+						let balancerVal = 1
+						if (hasBalancer) {
+							if (is_balancer) {
+								// берем значение тек.инпута - он и есть балансер
+								balancerVal = newValue
+							} else {
+								// ищем балансер в группе кэфов
+								let balancer = docKoefs.find((koef: any) => koef.koef_code == koef_code && koef.is_balancer)
+								balancerVal = balancer.value
 							}
-							return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 100) / 100, finalKoef: newKoef }
+							return { ...pos, value: Math.round( Math.ceil(pos.valueNoKoef * newKoef / balancerVal) * balancerVal * 100) / 100, finalKoef: newKoef }
 						}
-						return pos;
-					})
+						return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 100) / 100, finalKoef: newKoef }
+					}
+					return pos;
 				})
-			}
+			})
 			// console.log('finalKoef', newKoef)
 			// console.log('valueNoKoef', valueNoKoef)
 
@@ -388,8 +401,11 @@ const Order = ({proj_id, user_id}: any) => {
 		handleInputChange();
 	};
 
+
 	// для коэф. ФИКС расход, фикс К1, К2  = используются в рассчетах ИТОГО
 	const handleKoefChangeByName = (name: string, value: any) => {
+		if (value !== '')
+			value = parseFloat(value)
 		let updatedKoefs: any[] = [];
 		setDocKoefs((koefs: any[]) => {
 			updatedKoefs = koefs.map((koef: any) => {
@@ -618,29 +634,29 @@ const Order = ({proj_id, user_id}: any) => {
 						<div className='flex gap-8'>
 							<div className='flex w-full flex-col'>
 								<span>Номер договора</span>
-								<input onChange={handleOrderChange('dog_num')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.dog_num} />
+								<input name='dog_num' onChange={handleOrderChange('dog_num')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.dog_num} />
 							</div>
 							<div className='flex w-full flex-col'>
 								<span>Название</span>
-								<input onChange={handleOrderChange('name')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.name} />
+								<input name='name' onChange={handleOrderChange('name')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.name} />
 							</div>
 							<div className='flex w-full flex-col'>
 								<span>Описание</span>
-								<input onChange={handleOrderChange('description')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.description} />
+								<input name='description' onChange={handleOrderChange('description')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.description} />
 							</div>
 						</div>
 						<div className='flex gap-8'>
 							<div className='flex w-full flex-col'>
 								<span>Имя клиента</span>
-								<input onChange={handleOrderChange('client')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.client} />
+								<input name='client' onChange={handleOrderChange('client')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.client} />
 							</div>
 							<div className='flex w-full flex-col'>
 								<span>Телефон</span>
-								<input onChange={handleOrderChange('phone1')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.phone1} />
+								<input name='phone1' onChange={handleOrderChange('phone1')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.phone1} />
 							</div>
 							<div className='flex w-full flex-col'>
 								<span>Адрес</span>
-								<input onChange={handleOrderChange('location')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.location} />
+								<input name='location' onChange={handleOrderChange('location')} className=' mt-2 w-full max-w-full py-2 px-3 rounded-lg border my-auto' type="text" defaultValue={projectInfo && projectInfo.location} />
 							</div>
 						</div>
 					</div>
@@ -688,6 +704,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -767,6 +784,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -807,6 +825,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -851,6 +870,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -889,6 +909,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -932,8 +953,9 @@ const Order = ({proj_id, user_id}: any) => {
 					<div className='flex flex-row w-full px-5 py-2 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Наценка:</div>
 						<div className='w-3/12 my-auto'>
-							<input onChange={(e) => handleKoefChangeByName('koef1', parseFloat(e.target.value) )} className='no-num-arrows w-28 py-2 px-3 rounded-lg border my-auto' defaultValue={sums.koef1}
+							<input name='koef1' onChange={(e) => handleKoefChangeByName('koef1', e.target.value )} className='no-num-arrows w-28 py-2 px-3 rounded-lg border my-auto' defaultValue={sums.koef1}
 								type="number"
+								onWheel={(e) => (e.target as HTMLInputElement).blur()}
 								step="any"
 								onKeyDown={(event) => {
 								if (!/[0-9.]/.test(event.key) && 
@@ -981,8 +1003,9 @@ const Order = ({proj_id, user_id}: any) => {
 					<div className='flex flex-row w-full px-5 py-2 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Расход реальный для налоговой; Налоги раб,ЗП,аренда,реклама,Прочии расходы:</div>
 						<div className='w-3/12 my-auto'>
-							<input onChange={(e) => handleKoefChangeByName('rashReal1', parseFloat(e.target.value) )} className='no-num-arrows w-28 py-2 px-3 rounded-lg border my-auto' defaultValue={sums.rashReal1} 
+							<input name='rashReal1' onChange={(e) => handleKoefChangeByName('rashReal1', e.target.value )} className='no-num-arrows w-28 py-2 px-3 rounded-lg border my-auto' defaultValue={sums.rashReal1} 
 								type="number"
+								onWheel={(e) => (e.target as HTMLInputElement).blur()}
 								step="any"
 								onKeyDown={(event) => {
 								if (!/[0-9.]/.test(event.key) && 
@@ -1067,6 +1090,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1106,6 +1130,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1155,6 +1180,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1194,6 +1220,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1242,6 +1269,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1279,6 +1307,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1337,6 +1366,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1374,6 +1404,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1421,6 +1452,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1459,6 +1491,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1515,6 +1548,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1553,6 +1587,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1601,6 +1636,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1639,6 +1675,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1687,6 +1724,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1725,6 +1763,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1774,6 +1813,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1812,6 +1852,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1869,6 +1910,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1907,6 +1949,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1958,6 +2001,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -1993,6 +2037,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -2029,6 +2074,7 @@ const Order = ({proj_id, user_id}: any) => {
 					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
+						handleKoefNameChange={handleKoefNameChange}
 						key={koef.id}
 						koef={koef}
 						pos_id={position.id}
@@ -2066,8 +2112,9 @@ const Order = ({proj_id, user_id}: any) => {
 					<div className='flex flex-row w-full px-5 py-2 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Наценка:</div>
 						<div className='w-3/12 my-auto'>
-							<input onChange={(e) => handleKoefChangeByName('koef2', parseFloat(e.target.value) )} className='no-num-arrows w-28 py-2 px-3 rounded-lg border my-auto' defaultValue={sums.koef2} 
+							<input name='koef2' onChange={(e) => handleKoefChangeByName('koef2', e.target.value )} className='no-num-arrows w-28 py-2 px-3 rounded-lg border my-auto' defaultValue={sums.koef2} 
 								type="number"
+								onWheel={(e) => (e.target as HTMLInputElement).blur()}
 								step="any"
 								onKeyDown={(event) => {
 								if (!/[0-9.]/.test(event.key) && 
@@ -2119,8 +2166,9 @@ const Order = ({proj_id, user_id}: any) => {
 					<div className='flex flex-row w-full px-5 py-2 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Расход реальный для налоговой; Налоги раб,ЗП,аренда,реклама,Прочии расходы:</div>
 						<div className='w-3/12 my-auto'>
-							<input onChange={(e) => handleKoefChangeByName('rashReal2', parseFloat(e.target.value) )} className='no-num-arrows w-28 py-2 px-3 rounded-lg border my-auto' defaultValue={sums.rashReal2} 
+							<input name='rashReal2' onChange={(e) => handleKoefChangeByName('rashReal2', e.target.value )} className='no-num-arrows w-28 py-2 px-3 rounded-lg border my-auto' defaultValue={sums.rashReal2} 
 								type="number"
+								onWheel={(e) => (e.target as HTMLInputElement).blur()}
 								step="any"
 								onKeyDown={(event) => {
 								if (!/[0-9.]/.test(event.key) && 
