@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import { dbGetKoefs, dbGetProject, dbUpdateKoefs, dbUpdatePositions, dbUpdateProjectInfo } from '@/actions/Db'
 import { Cog6ToothIcon } from '@heroicons/react/24/outline'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, memo } from 'react'
 import Position from './Position'
 import Koef from './Koef'
 
 
-const Order = ({proj_id, user_id}: any) => { 
+const Order = memo(({proj_id, user_id}: any) => { 
 	const [visibleKoefs, setVisibleKoefs] = useState<{ [key: string]: boolean }>({});
 	const [formChanged, setFormChanged] = useState(false)
 	const [isProjectInfoOpen, setProjectInfoOpen] = useState(true)
@@ -17,13 +17,13 @@ const Order = ({proj_id, user_id}: any) => {
 	const [docKoefs, setDocKoefs] = useState<any | null>(null)
 	const [sums, setSums] = useState<any | null>(null)
 	
-	const toggleKoefsVisibility = (positionId: string) => {
+	const toggleKoefsVisibility = useCallback((positionId: string) => {
 		setVisibleKoefs((prevState) => ({
 		  ...prevState,
 		  [positionId]: !prevState[positionId],
 		}));
-	};
-	  
+	}, [])
+	
 	useEffect(() => {
 		const fetchFields = async () => {
 		  	const data = await dbGetProject(proj_id)
@@ -35,9 +35,6 @@ const Order = ({proj_id, user_id}: any) => {
 		};
 		fetchFields();
 	}, [proj_id]);
-	
-	if(positions) {
-	}
 
 	const saveProject = async () => {
 		try {
@@ -58,26 +55,26 @@ const Order = ({proj_id, user_id}: any) => {
 	  	setProjectInfoOpen(!isProjectInfoOpen);
 	}
 
-	const handleInputChange = () => {
-		setFormChanged(true);
-	}
+	const handleInputChange = useCallback(() => {
+        setFormChanged(true);
+    }, []);
 	
 	// по названию поля меняем значение - или инфа о договоре или коэф-ты
-	const handleOrderChange = (name: string) => (e: any) => {
-		let newValue = e.target.value
-		setProjectInfo((projectInfo: any) => ({ ...projectInfo, [name]: newValue }))
-		handleInputChange()
-	}
+	const handleOrderChange = useCallback((name: string) => (e: any) => {
+        let newValue = e.target.value;
+        setProjectInfo((projectInfo: any) => ({ ...projectInfo, [name]: newValue }));
+        handleInputChange();
+    }, [handleInputChange])
 	
-	const handlePosCreate = (id: number, name: string, price: number, value: number, measure: string, code: number, new_pos: boolean) => {
-		setPositions((positions: any[]) => {
-			const index = positions.findIndex((pos: any) => pos.id === id)
-			if (index === -1 && new_pos) {
-				return [...positions, { id, name, price, value, measure, code, new_pos }]
-			}
-		});
-		handleInputChange();
-	}
+	const handlePosCreate = useCallback((id: number, name: string, price: number, value: number, measure: string, code: number, new_pos: boolean) => {
+        setPositions((positions: any[]) => {
+            const index = positions.findIndex((pos: any) => pos.id === id);
+            if (index === -1 && new_pos) {
+                return [...positions, { id, name, price, value, measure, code, new_pos }];
+            }
+        });
+        handleInputChange();
+    }, [handleInputChange])
 
 	// при смене позиции обновляем ее в базе
 	// также ищем все связанные позиции (и перемножаем их индивидуальный фин. коэф-т)
@@ -88,8 +85,7 @@ const Order = ({proj_id, user_id}: any) => {
 		// if (fixed_id == '1_1') { upd_pos = ['1_2', '1_3', '1_4', '1_5', '1_6', '1_7', '1_8'] } // фундамент
 		// else if (fixed_id == '3_1') { upd_pos = ['2_1'] } // монтаж обв бруса
 		// else if (fixed_id == '2_3') { upd_pos = ['2_3','2_4'] } // сборка бруса
-
-		// 
+		
 		setPositions((positions: any[]) => {
 			return positions.map((pos: any) => {
 				// обновляем саму позицию
@@ -315,8 +311,6 @@ const Order = ({proj_id, user_id}: any) => {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_5_antres_utep50' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
 				
-
-
 				return pos
 			})
 		});
@@ -2242,6 +2236,6 @@ const Order = ({proj_id, user_id}: any) => {
 		</>
 	)
 
-}
+})
 
 export default Order
