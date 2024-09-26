@@ -1,6 +1,7 @@
 import { memo, useCallback } from "react"
 
 
+// eslint-disable-next-line react/display-name
 const Koef = memo(({ handleKoefChange, handleKoefNameChange, koef, pos_id }: any) => {
 
 	const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

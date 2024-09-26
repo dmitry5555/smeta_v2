@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 'use client'
 
 import Link from 'next/link'
@@ -1081,7 +1082,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 						toggleKoefsVisibility={toggleKoefsVisibility}
 						isKoefsVisible={visibleKoefs[position.id] || false}
 					/>
-					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any, koefIndex: any) => (
+					{visibleKoefs[position.id] && docKoefs && docKoefs.filter((koef: any) => koef.koef_code == position.koef_code).map((koef: any) => (
 					<Koef 
 						handleKoefChange={handleKoefChange}
 						handleKoefNameChange={handleKoefNameChange}
