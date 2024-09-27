@@ -243,7 +243,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				}  
 				// утепление кровли 13_1 - 100
 				if ((fixed_id === '12_1') && ['13_1'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_1_krov_utep100' && koef.is_balancer)
+					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_1_krov_utep100' && koef.is_balancer == true)
 					console.log('balancer: ', balancer)
 					console.log('value : ', value)
 					console.log('pos.finalKoef : ', pos.finalKoef)
