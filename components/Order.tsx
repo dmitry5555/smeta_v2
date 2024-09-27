@@ -243,18 +243,18 @@ const Order = memo(({proj_id, user_id}: any) => {
 				}  
 				// утепление кровли 13_1 - 100
 				if ((fixed_id === '12_1') && ['13_1'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_1_krov_utep100' && koef.is_balancer == true)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code === 'k13_1_krov_utep100' && koef.is_balancer)
 					console.log('balancer: ', balancer)
 					console.log('value : ', value)
 					console.log('pos.finalKoef : ', pos.finalKoef)
 					console.log('balancer.value : ', balancer.value)
 					console.log('Math.ceil(value * pos.finalKoef / balancer.value ) : ', Math.ceil(value * pos.finalKoef / balancer.value ))
 
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
+					// return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
 				}
 				// утепление кровли 13_2 - 50
 				if ((fixed_id === '12_3') && ['13_3'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_3_krov_utep50' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_3_krov_utep50' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
 				}
 				// монтаж отливов - копия
@@ -264,12 +264,12 @@ const Order = memo(({proj_id, user_id}: any) => {
 				// ПОЛЫ 1 ЭТ
 				// утепление полы 16_1 - 100
 				if ((fixed_id === '16_5') && ['17_6'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k17_6_poli_utepl100' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k17_6_poli_utepl100' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
 				}
 				// утепление 16_7 - 50 
 				if ((fixed_id === '16_7') && ['17_8'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k17_8_poli_utepl50' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k17_8_poli_utepl50' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
 				// полы 1 этаж - фанера
 				if ((fixed_id === '16_9') && ['17_13'].includes(pos.fixed_id) ) {
@@ -278,12 +278,12 @@ const Order = memo(({proj_id, user_id}: any) => {
 				// МЕЖЕТАЖКНОЕ
 				// утепление  - 100  
 				if ((fixed_id === '18_3') && ['19_3'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k19_3_mezh_utep100' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k19_3_mezh_utep100' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
 				}
 				// утепление  - 50 
 				if ((fixed_id === '18_5') && ['19_5'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k19_5_mezh_utep50' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k19_5_mezh_utep50' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
 				// фанера
 				if ((fixed_id === '18_7') && ['19_9'].includes(pos.fixed_id) ) {
@@ -292,22 +292,22 @@ const Order = memo(({proj_id, user_id}: any) => {
 				// ЧЕРДАЧНОЕ
 				// утепление  - 100  
 				if ((fixed_id === '20_3') && ['21_3'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k21_3_cherd_utep100' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k21_3_cherd_utep100' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
 				}
 				// утепление  - 50 
 				if ((fixed_id === '20_5') && ['21_5'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k21_5_cherd_utep50' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k21_5_cherd_utep50' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
 				}
 				// АНТРЕСОЛЬ
 				// утепление  - 100  
 				if ((fixed_id === '27_3') && ['28_3'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_3_antres_utep100' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_3_antres_utep100' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
 				// утепление  - 50 
 				if ((fixed_id === '27_7') && ['28_5'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_5_antres_utep50' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_5_antres_utep50' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
 				// фанера
 				if ((fixed_id === '27_6') && ['28_9'].includes(pos.fixed_id) ) {
@@ -315,7 +315,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				}
 				//  МЕЖК ПЕРЕГОРОДКИ - уткплитель
 				if ((fixed_id === '22_2') && ['23_2'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_5_antres_utep50' && koef.is_balancer)
+					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_5_antres_utep50' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
 				
 				return pos
