@@ -244,11 +244,10 @@ const Order = memo(({proj_id, user_id}: any) => {
 				// утепление кровли 13_1 - 100
 				if ((fixed_id === '12_1') && ['13_1'].includes(pos.fixed_id) ) {
 					// let balancer = docKoefs.find((koef: any) => koef.koef_code === 'k13_1_krov_utep100' && koef.is_balancer)
-					const allMatching = docKoefs.filter( (koef:any)  => koef.koef_code.includes('13_1') || koef.koef_code.includes('krov_utep100'));
-					console.log('All potentially matching koefs:', allMatching);
-
-					const exactMatch = docKoefs.find((koef:any)  => koef.koef_code === 'k13_1_krov_utep100');
-					console.log('Exact match:', exactMatch);
+					// const allMatching = docKoefs.filter( (koef:any)  => koef.koef_code.includes('13_1') || koef.koef_code.includes('krov_utep100'));
+					// console.log('All potentially matching koefs:', allMatching);
+					// const exactMatch = docKoefs.find((koef:any)  => koef.koef_code === 'k13_1_krov_utep100');
+					// console.log('Exact match:', exactMatch);
 
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_1_krov_utep100' && koef.is_balancer == true);
 					console.log('Found balancer:', balancer);
@@ -258,7 +257,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				}
 				// утепление кровли 13_2 - 50
 				if ((fixed_id === '12_3') && ['13_3'].includes(pos.fixed_id) ) {
-					let balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_3_krov_utep50' && koef.is_balancer)
+					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_3_krov_utep50' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
 				}
 				// монтаж отливов - копия
