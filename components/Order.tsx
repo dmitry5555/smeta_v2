@@ -243,14 +243,18 @@ const Order = memo(({proj_id, user_id}: any) => {
 				}  
 				// утепление кровли 13_1 - 100
 				if ((fixed_id === '12_1') && ['13_1'].includes(pos.fixed_id) ) {
-					let balancer = docKoefs.find((koef: any) => koef.koef_code === 'k13_1_krov_utep100' && koef.is_balancer)
-					console.log('balancer: ', balancer)
-					console.log('value : ', value)
-					console.log('pos.finalKoef : ', pos.finalKoef)
-					console.log('balancer.value : ', balancer.value)
-					console.log('Math.ceil(value * pos.finalKoef / balancer.value ) : ', Math.ceil(value * pos.finalKoef / balancer.value ))
+					// let balancer = docKoefs.find((koef: any) => koef.koef_code === 'k13_1_krov_utep100' && koef.is_balancer)
+					const allMatching = docKoefs.filter( (koef:any)  => koef.koef_code.includes('13_1') || koef.koef_code.includes('krov_utep100'));
+					console.log('All potentially matching koefs:', allMatching);
 
-					// return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
+					const exactMatch = docKoefs.find((koef:any)  => koef.koef_code === 'k13_1_krov_utep100');
+					console.log('Exact match:', exactMatch);
+
+					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_1_krov_utep100' && koef.is_balancer == true);
+					console.log('Found balancer:', balancer);
+// console.log('Math.ceil(value * pos.finalKoef / balancer.value ) : ', Math.ceil(value * pos.finalKoef / balancer.value ))
+
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
 				}
 				// утепление кровли 13_2 - 50
 				if ((fixed_id === '12_3') && ['13_3'].includes(pos.fixed_id) ) {
