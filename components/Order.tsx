@@ -171,47 +171,51 @@ const Order = memo(({proj_id, user_id}: any) => {
 				}
 
 				// фасад Подшив свесов кровли , копия в шлифовку
-				if ((fixed_id === '6_1') && ['6_3'].includes(pos.fixed_id) ) {
-					return { ...pos, value: value }
-				}
+				// if ((fixed_id === '6_1') && ['6_3'].includes(pos.fixed_id) ) {
+				// 	return { ...pos, value: value }
+				// }
 				// Монтаж лобовых досок , копия в шлифовку
-				if ((fixed_id === '6_2') && ['6_4'].includes(pos.fixed_id) ) {
-					return { ...pos, value: value }
-				}
+				// if ((fixed_id === '6_2') && ['6_4'].includes(pos.fixed_id) ) {
+				// 	return { ...pos, value: value }
+				// }
 				
 				// КОЭФФИЦИЕНТЫ
 				// сохранить temp_val
 				// сохранить value * finalKoef
 				
 				// фасад - расх материалы ( сумма шлифовок )
-				if ((fixed_id === '6_1') && ['7_3'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_2')
+				if ((fixed_id === '6_3') && ['7_3'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_4')
 					return { ...pos, value: (value + pos2.value) }
 				}
-				// Монтаж лобовых досок , копия в шлифовку
-				if ((fixed_id === '6_2') && ['7_3'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_1')
+				// фасад - расх материалы ( сумма шлифовок )
+				if ((fixed_id === '6_4') && ['7_3'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_3')
 					return { ...pos, value:(value + pos2.value) }
 				}
 	
 				// коэффициенты k7_1_doska
 				// доска - сумма шлифовок x 0.02 x 1.2
-				if ((fixed_id === '6_1') && ['7_1'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_2')
-					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
+				if ((fixed_id === '6_3') && ['7_1'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_4')
+					console.log('6_3[d] pos.finalKoef: ', pos.finalKoef)
+					return { ...pos, valueNoKoef: (value + pos2.value), value: ((value + pos2.value) * pos.finalKoef).toFixed(2) }
 				} 
-				if ((fixed_id === '6_2') && ['7_1'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_1')
-					return { ...pos, valueNoKoef:(value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
+				if ((fixed_id === '6_4') && ['7_1'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_3')
+					console.log('6_4[d] pos.finalKoef: ', pos.finalKoef)
+					return { ...pos, valueNoKoef:(value + pos2.value), value: ((value + pos2.value) * pos.finalKoef).toFixed(2) }
 				}
 
 				// окраска фасада k7_2_okraska свесы кровли
-				if ((fixed_id === '6_1') && ['7_2'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_2')
+				if ((fixed_id === '6_3') && ['7_2'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_4')
+					// console.log('6_3[k] pos.finalKoef: ', pos.finalKoef)
 					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
 				}
-				if ((fixed_id === '6_2') && ['7_2'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_1')
+				if ((fixed_id === '6_4') && ['7_2'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_3')
+					// console.log('6_4[k] pos.finalKoef: ', pos.finalKoef)
 					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
 				}
 
@@ -363,7 +367,8 @@ const Order = memo(({proj_id, user_id}: any) => {
 					if (koef.value == 0 || koef.value == '') return 0;
 					return Math.round(finalKoef / koef.value * 100) / 100;
 				}
-				return Math.round(finalKoef * koef.value * 100) / 100;
+				return finalKoef * koef.value;
+				// return Math.round(finalKoef * koef.value * 100) / 100;
 			}, 1)
 
 			setPositions((positions: any[]) => {
