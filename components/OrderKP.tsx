@@ -700,21 +700,21 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<li key={position.id}>{positions[0].name}</li>} */}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '1_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '1_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Винтовые сваи диаметром 114/108 мм толщина стенки 4,5 мм длина 3000 мм - {position.value} {position.measure}.</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '1_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '1_5')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Оголовок - {position.value} {position.measure}.</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '1_8')
+					const position = positions.find((pos:any) => pos.fixed_id === '1_8')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
@@ -730,86 +730,86 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{getTillComa(position.name)}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_3')
 					return position && position.value > 0 ? (
 						<li key={position.id+100}>Сечение бруса внешних стен {removeFirstTwoWords(position.name)}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Сечение бруса внешних стен {removeFirstTwoWords(position.name)}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_5')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_12')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_12')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Утепление перерубов - политерм, ПСУЛ лента</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_13')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_13')
 					return position && position.value > 0 ? (
 						<li key={position.id+100}>Деревянные нагеля</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '2_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '2_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Пружинные узлы</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_13')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_13')
 					return position && position.value > 0 ? (
 						<li key={position.id_100}>Обработка антисептиком обвязочного бруса и лаг 1 этажа</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_14')
-					const position2 = positions.find(pos => pos.fixed_id === '3_15')
-					const position3 = positions.find(pos => pos.fixed_id === '3_16')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_14')
+					const position2 = positions.find((pos:any) => pos.fixed_id === '3_15')
+					const position3 = positions.find((pos:any) => pos.fixed_id === '3_16')
 					return position && position.value + position2.value + position3.value > 0 ? (
 						<li key={position.id}>Лаги 1 этажа – доска сухая строганная, сечением 195/95х45 мм, +/- 3мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_2')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_2')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Антисептик-консервант невымываемый NEOMID 430</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '3_17')
+					const position = positions.find((pos:any) => pos.fixed_id === '3_17')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
@@ -823,71 +823,71 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_15')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_15')
 					return position && position.value > 0 ? (
 						<li key={position.id + 100}>{position.name} с доборными элементами (коньки, карнизные планки, ветровые планки в цвет кровли)</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_11')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_11')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '4_11')
+					const position = positions.find((pos:any) => pos.fixed_id === '4_11')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_5')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_6')
-					const position2 = positions.find(pos => pos.fixed_id === '5_7')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_6')
+					const position2 = positions.find((pos:any) => pos.fixed_id === '5_7')
 					return position && position.value + position2.value > 0 ? (
 						<li key={position.id}>Гидро-ветрозащитная паропроницаемая мембрана Изоспан АМ</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_8')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_8')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_19')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_19')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
@@ -902,28 +902,28 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '6_2')
+					const position = positions.find((pos:any) => pos.fixed_id === '6_2')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Лобовые доски, подшив свесов кровли - доска сухая строганная 90х20 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '6_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '6_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Подшив потолка террасы/крыльца - доска сухая строганная 90х20 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '5_15')
+					const position = positions.find((pos:any) => pos.fixed_id === '5_15')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Цвет на выбор ______________</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '7_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '7_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
@@ -937,14 +937,14 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '8_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '8_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Шлифовка на 2 слоя стен, столбов, перерубов</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '8_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '8_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Окраска на 2 слоя стен, столбов, перерубов</li>
 					) : null;
@@ -959,14 +959,14 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '11_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '11_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '11_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '11_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Метизы, крепежи</li>
 					) : null;
@@ -980,63 +980,63 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '14_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '14_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Обсадные коробки из клееной доски 180х40 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '15_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '15_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '15_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '15_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Утепление - политерм, ПСУЛ лента</li>
 					) : null;
 					})()}		
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '15_6')
+					const position = positions.find((pos:any) => pos.fixed_id === '15_6')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '15_7')
+					const position = positions.find((pos:any) => pos.fixed_id === '15_7')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '15_9')
+					const position = positions.find((pos:any) => pos.fixed_id === '15_9')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '15_17')
+					const position = positions.find((pos:any) => pos.fixed_id === '15_17')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '15_10')
+					const position = positions.find((pos:any) => pos.fixed_id === '15_10')
 					return position && position.value > 0 ? (
 						<li key={position.id+'2'}>Наличники деревянные к окнам и дверям по фасаду</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '14_8')
+					const position = positions.find((pos:any) => pos.fixed_id === '14_8')
 					return position && position.value > 0 ? (
 						<li key={position.id+'2'}>Шлифовка, окраска на 2 слоя наличников</li>
 					) : null;
@@ -1044,7 +1044,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 						<li>Цвет окраски на выбор _______________</li>
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '13_9')
+					const position = positions.find((pos:any) => pos.fixed_id === '13_9')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
@@ -1058,80 +1058,80 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '16_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '16_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Черновой пол естественной влажности</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '16_2')
+					const position = positions.find((pos:any) => pos.fixed_id === '16_2')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '17_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '17_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '17_4')
-					const position2 = positions.find(pos => pos.fixed_id === '17_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '17_4')
+					const position2 = positions.find((pos:any) => pos.fixed_id === '17_5')
 					return position && position.value + position2.value > 0 ? (
 						<li key={position.id}>Ветро-влагозащитная мембрана Изоспан АМ, проклейка швов</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '17_6')
-					const position2 = positions.find(pos => pos.fixed_id === '17_8')
+					const position = positions.find((pos:any) => pos.fixed_id === '17_6')
+					const position2 = positions.find((pos:any) => pos.fixed_id === '17_8')
 					return position && position.value + position2.value > 0 ? (
 						<li key={position.id}>Утепление полов 200 мм</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '17_8')
+					const position = positions.find((pos:any) => pos.fixed_id === '17_8')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Утепление полов вперехлест 50мм</li>
 					) : null;
 					})()}
 	
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '17_6')
+					const position = positions.find((pos:any) => pos.fixed_id === '17_6')
 					return position && position.value > 0 ? (
 						<li key={position.id+100}>Утеплитель Техноблок Стандарт или его аналоги</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '17_9')
-					const position2 = positions.find(pos => pos.fixed_id === '17_10')
+					const position = positions.find((pos:any) => pos.fixed_id === '17_9')
+					const position2 = positions.find((pos:any) => pos.fixed_id === '17_10')
 					return position && position.value + position2.value > 0 ? (
 						<li key={position.id}>Пароизоляционная пленка Изоспан В, с проклейкой швов</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '16_6')
+					const position = positions.find((pos:any) => pos.fixed_id === '16_6')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '17_13')
+					const position = positions.find((pos:any) => pos.fixed_id === '17_13')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '17_14')
+					const position = positions.find((pos:any) => pos.fixed_id === '17_14')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Метизы, крепежи</li>
 					) : null;
@@ -1145,43 +1145,43 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '12_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '12_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Утепление кровли 200 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '12_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '12_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Перекрестное утепление 50 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '13_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '13_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{getTillComa(position.name)}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '13_4')
-					const position2 = positions.find(pos => pos.fixed_id === '13_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '13_4')
+					const position2 = positions.find((pos:any) => pos.fixed_id === '13_5')
 					return position && position.value + position2.value > 0 ? (
 						<li key={position.id}>Пароизоляционная пленка Изоспан В, с проклейкой швов</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '13_8')
+					const position = positions.find((pos:any) => pos.fixed_id === '13_8')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Монтаж обрешетки, доска сухая строганная 90х20 мм, шаг 400-650мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '13_9')
+					const position = positions.find((pos:any) => pos.fixed_id === '13_9')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Метизы, крепежи</li>
 					) : null;
@@ -1196,42 +1196,42 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '22_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '22_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Каркас межкомнатных перегородок – доска сухая строганная 145х45 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '22_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '22_1')
 					return position && position.value > 0 ? (
 						<li key={position.id+100}>Каркас межкомнатных перегородок – доска сухая строганная 95х45 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '22_2')
+					const position = positions.find((pos:any) => pos.fixed_id === '22_2')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Утеплитель Техноблок Стандарт или его аналоги 100 мм + 50 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '22_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '22_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Пароизоляционная пленка Изоспан В, проклейка швов</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '23_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '23_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Доска сухая строганная 90х20 мм, шаг 400-650 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '23_8')
+					const position = positions.find((pos:any) => pos.fixed_id === '23_8')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Метизы, крепежи</li>
 					) : null;
@@ -1246,50 +1246,50 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '19_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '19_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '18_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '18_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Утепление 200 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '18_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '18_5')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Утепление вперехлест 50 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '19_6')
+					const position = positions.find((pos:any) => pos.fixed_id === '19_6')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Пароизоляционная пленка Изоспан В с проклейкой швов</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '19_3')
-					const position2 = positions.find(pos => pos.fixed_id === '19_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '19_3')
+					const position2 = positions.find((pos:any) => pos.fixed_id === '19_5')
 					return position && position.value + position2.value > 0 ? (
 						<li key={position.id}>Утеплитель Техноблок Стандарт или его аналоги</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '19_9')
+					const position = positions.find((pos:any) => pos.fixed_id === '19_9')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Фанера 20 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '19_10')
+					const position = positions.find((pos:any) => pos.fixed_id === '19_10')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Метизы, крепежи</li>
 					) : null;
@@ -1303,57 +1303,57 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '21_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '21_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '21_6')
-					const position2 = positions.find(pos => pos.fixed_id === '21_7')
+					const position = positions.find((pos:any) => pos.fixed_id === '21_6')
+					const position2 = positions.find((pos:any) => pos.fixed_id === '21_7')
 					return position && position.value + position2.value > 0 ? (
 						<li key={position.id}>Гидро-ветрозащитная паропроницаемая мембрана Изоспан АМ, проклейка швов</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '20_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '20_3')
 					return position && position.value > 0 ? (
 						<li key={position.id+100}>Утепление перекрытия 200 мм</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '20_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '20_5')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Перекрестное утепление 50 мм</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '20_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '20_3')
 					return position && position.value > 0 ? (
 						<li key={position.id+100}>Утеплитель Техноблок Стандарт или его аналоги</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '20_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '20_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '21_2')
+					const position = positions.find((pos:any) => pos.fixed_id === '21_2')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Пароизоляционная пленка Изоспан В, с проклейкой швов</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '21_10')
+					const position = positions.find((pos:any) => pos.fixed_id === '21_10')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Метизы, крепежи</li>
 					) : null;
@@ -1367,42 +1367,42 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '27_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '27_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Обрешетка - доска сухая строганная 90х20 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '27_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '27_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Утепление 200 мм</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '27_2')
+					const position = positions.find((pos:any) => pos.fixed_id === '27_2')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Пароизоляционная пленка Изоспан В, проклейка швов</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '27_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '27_3')
 					return position && position.value > 0 ? (
 						<li key={position.id+100}>Утеплитель Техноблок Стандарт или его аналоги</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '27_6')
+					const position = positions.find((pos:any) => pos.fixed_id === '27_6')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Фанера 20 мм</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '28_9')
+					const position = positions.find((pos:any) => pos.fixed_id === '28_9')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Метизы, крепежи</li>
 					) : null;
@@ -1416,35 +1416,35 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					<ul className='list-disc pl-4'>
 
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '29_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '29_1')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Установка септика</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '29_2')
+					const position = positions.find((pos:any) => pos.fixed_id === '29_2')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Разводка канализации</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '29_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '29_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Разводка воды по дому</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '29_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '29_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Разводка отопления по дому</li>
 					) : null;
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find(pos => pos.fixed_id === '29_5')
+					const position = positions.find((pos:any) => pos.fixed_id === '29_5')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Теплый пол</li>
 					) : null;
@@ -1473,7 +1473,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					
 						<ul className='list-disc pl-4 w-full'>
 						{positions && (() => {
-						const position = positions.find(pos => pos.fixed_id === '29_1')
+						const position = positions.find((pos:any) => pos.fixed_id === '29_1')
 						// console.log(position)
 						return position && position.value > 0 ? (
 							<li key={position.id+200} className='my-4'>Септик  <span className='ml-auto float-right underline'>Итого по этапу: {position.price * position.value} руб.</span></li>
@@ -1481,28 +1481,28 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 						})()}
 
 						{positions && (() => {
-						const position = positions.find(pos => pos.fixed_id === '29_2')
+						const position = positions.find((pos:any) => pos.fixed_id === '29_2')
 						return position && position.value > 0 ? (
 							<li key={position.id+200} className='my-4'>Разводка канализации  <span className='ml-auto float-right underline'>Итого по этапу: {position.price * position.value} руб.</span></li>
 						) : null;
 						})()}
 
 						{positions && (() => {
-						const position = positions.find(pos => pos.fixed_id === '29_3')
+						const position = positions.find((pos:any) => pos.fixed_id === '29_3')
 						return position && position.value > 0 ? (
 							<li key={position.id+200} className='my-4'>Разводка воды по дому  <span className='ml-auto float-right underline'>Итого по этапу: {position.price * position.value} руб.</span></li>
 						) : null;
 						})()}
 
 						{positions && (() => {
-						const position = positions.find(pos => pos.fixed_id === '29_4')
+						const position = positions.find((pos:any) => pos.fixed_id === '29_4')
 						return position && position.value > 0 ? (
 							<li key={position.id+200} className='my-4'>Отопление по дому + котельная  <span className='ml-auto float-right underline'>Итого по этапу: {position.price * position.value} руб.</span></li>
 						) : null;
 						})()}
 
 						{positions && (() => {
-						const position = positions.find(pos => pos.fixed_id === '29_5')
+						const position = positions.find((pos:any) => pos.fixed_id === '29_5')
 						return position && position.value > 0 ? (
 							<li key={position.id+200} className='my-4'>Теплый пол  <span className='ml-auto float-right underline'>Итого по этапу: {position.price * position.value} руб.</span></li>
 						) : null;
