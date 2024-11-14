@@ -42,7 +42,7 @@ const Orders = ( {user_id}: any ) => {
 				<div className='w-6/12 my-auto'>Название</div>
 				<div className='w-2/12  my-auto'>Номер договора</div>
 				<div className='w-3/12  my-auto'>Изменен</div>
-				<div className='w-1/12 flex justify-end'>PDF</div>
+				<div className='w-1/12 flex justify-end'>КП</div>
 				{/* <div className='w-1/12 my-auto'>Цена</div>
 				<div className='w-2/12 my-auto'>Сумма</div> */}
 				{/* <div className='w-1/12 my-auto'>Чек</div> */}
@@ -79,7 +79,8 @@ const Orders = ( {user_id}: any ) => {
 							</div>
 							<div className='w-1/12 flex gap-4 ml-auto'>
 								<div className='flex gap-4 ml-auto'>
-									<Link className='ml-auto' href=''> <DocumentArrowDownIcon className=' w-6 text-gray-600' />  </Link>
+									<Link className='ml-auto' href={`/kp/${project.id}`}> <DocumentArrowDownIcon className=' w-6 text-gray-600' />
+									</Link>
 								</div>
 							</div>
 						</div>

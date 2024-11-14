@@ -14,7 +14,7 @@ const readOnlyIds = [
 	'11_3',  // Доска пола лиственница
 	// '12_2', '12_3', '12_4', '12_5', // Утепления кровли
 	'13_1', '13_3', // окна - утеплитель 1 и 2
-	'14_5', // монтаж отливов
+	// '14_5', // монтаж отливов
 	// '15_7', // Двери Окна - Материалы  - отлив металлический
 
 	'17_6', // УтеплительТехноблок Стандарт, 0,288 м3
@@ -96,7 +96,7 @@ const Position = memo(({ docKoefs, position, handlePosChange, uniqueId, toggleKo
 			fixed_id	берется из бд, задан вручную  */}
 		<div className='flex flex-row w-full px-5 py-2 border border-t-0 text-sm -z-1' data-id={position.fixed_id} data-fixed-id={position.fixedId} data-unique-id={uniqueId}>
 			<div className='w-7/12 my-auto flex-row flex'>
-				<input onChange={handleNameChange} name='name' className='w-4/5 max-w-full py-2 px-3 rounded-lg  my-auto' type="text" defaultValue={position.name} />
+				<input onChange={handleNameChange} name='name' className='w-10/12 max-w-full py-2 px-3 rounded-lg  my-auto' type="text" defaultValue={position.name} />
 				{hasKoefs && <AdjustmentsHorizontalIcon className="w-5 mr-6 opacity-100 ml-auto cursor-pointer" onClick={handleToggleDocKoefs} />}
 			</div>
 			<div className='w-1/12 my-auto mx-1'>

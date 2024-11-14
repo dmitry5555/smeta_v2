@@ -21,5 +21,3 @@ visibleKoefs - запоминаем состояние видимости коэ
 
 
 upd
-
-	// return Math.round(finalKoef * koef.value * 100) / 100;
