@@ -3,7 +3,7 @@ import { AdjustmentsHorizontalIcon, LockClosedIcon } from "@heroicons/react/24/o
 import { memo, useEffect, useState } from "react";
 
 const readOnlyIds = [
-	'1_2', '1_3', '1_4', '1_5', '1_6', '1_7', '1_8', // Фундамент
+	'1_2', '1_3', '1_4', '1_5', '1_6', '1_7', // Фундамент
 	'2_1', '2_2', '2_4', // Стеновой комплект - монтаж + сборка + антисептирование
 	'4_11', // Антисептирование стропил, контробрешетки, обрешетки
 	// '6_3', '6_4', // Свесы кровли работы
@@ -32,6 +32,7 @@ const readOnlyIds = [
 	'28_9', // антресоль - фанера
 
 	'23_2', // Межкомнатные перегородки утеплитель
+	'23_10' // Межкомнатные перегородки утеплитель 50
 ]
 
 const Position = memo(({ docKoefs, position, handlePosChange, uniqueId, toggleKoefsVisibility, isKoefsVisible }: any) => {

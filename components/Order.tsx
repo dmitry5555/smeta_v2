@@ -43,9 +43,9 @@ const Order = memo(({proj_id, user_id}: any) => {
 			const updateProject = await dbUpdateProjectInfo(projectInfo, user_id);
 			const updatePositions = await dbUpdatePositions(projectInfo.id, positions);
 			const updateKoefs = await dbUpdateKoefs(docKoefs);
-			console.log('Project updated successfully:', updateProject);
-			console.log('Positions updated successfully:', updatePositions);
-			console.log('Koefs updated successfully:', updateKoefs);
+			// console.log('Project updated successfully:', updateProject);
+			// console.log('Positions updated successfully:', updatePositions);
+			// console.log('Koefs updated successfully:', updateKoefs);
 			window.location.href = `/project/${projectInfo.id}`;
 		} catch (error) {
 		  	console.error('Error updating project:', error);
@@ -55,7 +55,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 	const toggleProjectInfo = () => {
 	  	setProjectInfoOpen(!isProjectInfoOpen);
 	}
-
+	
 	const handleInputChange = useCallback(() => {
         setFormChanged(true);
     }, []);
@@ -96,7 +96,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 
 				// перебираем все другие позиции 
 				// фундамент
-				if (fixed_id === '1_1' && ['1_2', '1_3', '1_4', '1_5', '1_6', '1_7', '1_8'].includes(pos.fixed_id) ) {
+				if (fixed_id === '1_1' && ['1_2', '1_3', '1_4', '1_5', '1_6', '1_7'].includes(pos.fixed_id) ) {
 					return { ...pos, value: value }
 				}
 
@@ -203,15 +203,15 @@ const Order = memo(({proj_id, user_id}: any) => {
 	
 				// коэффициенты k7_1_doska
 				// доска - сумма шлифовок x 0.02 x 1.2
-				if ((fixed_id === '6_3') && ['7_1'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_4')
+				if ((fixed_id === '6_1') && ['7_1'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_2')
 					// console.log('6_3[d] pos.finalKoef: ', pos.finalKoef)
-					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.ceil((value + pos2.value) * pos.finalKoef) }
+					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100 }
 				} 
-				if ((fixed_id === '6_4') && ['7_1'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_3')
+				if ((fixed_id === '6_2') && ['7_1'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_1')
 					// console.log('6_4[d] pos.finalKoef: ', pos.finalKoef)
-					return { ...pos, valueNoKoef:(value + pos2.value), value: Math.ceil((value + pos2.value) * pos.finalKoef) }
+					return { ...pos, valueNoKoef:(value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100 }
 				}
 
 				// окраска фасада k7_2_okraska свесы кровли
@@ -260,6 +260,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				if ((fixed_id === '12_1') && ['13_1'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_1_krov_utep100' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
+					// return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
 				}
 				// утепление кровли 13_2 - 50  
 				if ((fixed_id === '12_3') && ['13_3'].includes(pos.fixed_id) ) {
@@ -329,6 +330,10 @@ const Order = memo(({proj_id, user_id}: any) => {
 				if ((fixed_id === '22_2') && ['23_2'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k23_2_utepl' && koef.is_balancer)
 					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 } }
+				//  МЕЖК ПЕРЕГОРОДКИ - уткплитель 50
+				if ((fixed_id === '22_3') && ['23_10'].includes(pos.fixed_id) ) {
+					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k23_2_utepl_50' && koef.is_balancer)
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 } }
 
 				return pos
 			})
@@ -354,6 +359,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 	};
 
 	const handleKoefChange = (id: number, pos_id: number, koef_code: string, is_balancer: boolean, value: any) => {
+		// console.log('handleKoefChange', id, pos_id, koef_code, is_balancer, value)
 		let updatedKoefs: any[] = [];
 
 		let newValue = value
@@ -375,17 +381,19 @@ const Order = memo(({proj_id, user_id}: any) => {
 			.reduce((finalKoef: number, koef: any) => {
 				if (koef.is_balancer) {
 					hasBalancer = true
+					// console.log('finalKoef3 ', finalKoef)
 					return finalKoef;
 					// return Math.round(finalKoef * 1 * 100) / 100;
 				}
 				if (koef.is_divider) {
 					if (koef.value == 0 || koef.value == '') return 0;
+					// console.log('finalKoef2 ', finalKoef)
 					return finalKoef / koef.value;
 					// return Math.round(finalKoef / koef.value * 100) / 100;
-
 				}
-				return finalKoef * koef.value;
-				// return Math.round(finalKoef * koef.value * 100) / 100;
+				// return finalKoef * koef.value;
+				// console.log('finalKoef 1', finalKoef)
+				return finalKoef * koef.value
 			}, 1)
 
 			setPositions((positions: any[]) => {
@@ -402,25 +410,33 @@ const Order = memo(({proj_id, user_id}: any) => {
 								let balancer = docKoefs.find((koef: any) => koef.koef_code == koef_code && koef.is_balancer)
 								balancerVal = balancer.value
 							}
-							return { ...pos, value: Math.round( Math.ceil(pos.valueNoKoef * newKoef / balancerVal) * balancerVal * 100) / 100, finalKoef: newKoef }
-						} else if (pos.koef_code == 'k17_13_fanera' || 'k19_9_fanera' || 'k28_9_antres_fanera') {
-							return { ...pos, value: Math.ceil(pos.valueNoKoef * newKoef), finalKoef: newKoef }
-						} else if (pos.koef_code == 'k7_2_okraska' || 'k9_1_orkaska_fasad' || 'k9_2_orkaska_perer') {
-							return { ...pos, value: Math.ceil(pos.valueNoKoef * newKoef), finalKoef: newKoef }
-							// 7_2 9_1 9_2 k7_2_okraska  k9_1_orkaska_fasad   k9_2_orkaska_perer
-						} 
-
-						return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 100) / 100, finalKoef: newKoef }
+							// console.log('CASE-1') // skipping
+							return { ...pos, value: Math.round( Math.ceil(pos.valueNoKoef * newKoef / balancerVal) * balancerVal * 100) / 100, finalKoef: newKoef } // orig
+						} else if (pos.koef_code == 'k11_3_doska' || pos.koef_code == 'k7_1_fasad_doska') {
+							return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 100) / 100, finalKoef: newKoef }
+						}
+						// else if (pos.koef_code == 'k17_13_fanera' || pos.koef_code == 'k19_9_fanera' || pos.koef_code == 'k28_9_antres_fanera' ||
+						// 	pos.koef_code == 'k7_2_okraska' || pos.koef_code ==  'k9_1_orkaska_fasad'|| pos.koef_code == 'k9_2_orkaska_perer') {
+						// 	console.log('CASE-2')
+						// 	return { ...pos, value: Math.ceil(pos.valueNoKoef * newKoef), finalKoef: newKoef }
+						// }
+							
+						// } else if (pos.koef_code == 'k7_2_okraska' || 'k9_1_orkaska_fasad' || 'k9_2_orkaska_perer') {
+						// 	console.log('CASE-3')
+						// 	return { ...pos, value: Math.ceil(pos.valueNoKoef * newKoef), finalKoef: newKoef }
+						// 	// 7_2 9_1 9_2 k7_2_okraska  k9_1_orkaska_fasad   k9_2_orkaska_perer
+						// } 
+						// console.log('CASE-4')
+						return { ...pos, value: Math.ceil(pos.valueNoKoef * newKoef), finalKoef: newKoef }
+						// return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 100) / 100, finalKoef: newKoef }
 					}
 					return pos;
 				})
 			})
-			// console.log('finalKoef', newKoef)
-			// console.log('valueNoKoef', valueNoKoef)
 
 			return updatedKoefs;
 		});
-
+		
 		handleInputChange();
 	};
 

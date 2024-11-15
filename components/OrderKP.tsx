@@ -1,25 +1,19 @@
 /* eslint-disable react/display-name */
 'use client'
 
-import Link from 'next/link'
-import { dbGetKoefs, dbGetProject, dbUpdateKoefs, dbUpdatePositions, dbUpdateProjectInfo } from '@/actions/Db'
-import { Cog6ToothIcon } from '@heroicons/react/24/outline'
+import { dbGetKoefs, dbGetProject } from '@/actions/Db'
 import { useCallback, useEffect, useState, memo } from 'react'
-import Position from './Position'
-import Koef from './Koef'
+
 // import { Document, Packer, Paragraph, TextRun } from "docx";
 // import { saveAs } from "file-saver";
 
 const OrderKp = memo(({proj_id, user_id}: any) => { 
-	const [visibleKoefs, setVisibleKoefs] = useState<{ [key: string]: boolean }>({});
-	const [formChanged, setFormChanged] = useState(false)
-	const [isProjectInfoOpen, setProjectInfoOpen] = useState(true)
-	const [projectInfo, setProjectInfo] = useState<any | null>(null)
+
 	const [positions, setPositions] = useState<any | null>(null)
 	const [docKoefs, setDocKoefs] = useState<any | null>(null)
 	const [sums, setSums] = useState<any | null>(null)
 	
-	const content = document.getElementById("content");
+	// const content = document.getElementById("content");
 
 	// function generateDocFromDiv() {
 	// 	// Получаем div по ID
@@ -56,16 +50,6 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 	// 	});
 	// }
 	  
-			
-
-		
-	const toggleKoefsVisibility = useCallback((positionId: string) => {
-		setVisibleKoefs((prevState) => ({
-		  ...prevState,
-		  [positionId]: !prevState[positionId],
-		}));
-	}, [])
-	
 	useEffect(() => {
 		const fetchFields = async () => {
 		  	const data = await dbGetProject(proj_id)
@@ -73,415 +57,11 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 			setDocKoefs(koefs)
 			// console.log(koefs)
 		    setPositions(data?.fields)
-			setProjectInfo(data)
 		};
 		fetchFields();
 	}, [proj_id]);
 
-	const saveProject = async () => {
-		try {
-			setFormChanged(false)
-			const updateProject = await dbUpdateProjectInfo(projectInfo, user_id);
-			const updatePositions = await dbUpdatePositions(projectInfo.id, positions);
-			const updateKoefs = await dbUpdateKoefs(docKoefs);
-			console.log('Project updated successfully:', updateProject);
-			console.log('Positions updated successfully:', updatePositions);
-			console.log('Koefs updated successfully:', updateKoefs);
-			window.location.href = `/project/${projectInfo.id}`;
-		} catch (error) {
-		  console.error('Error updating project:', error);
-		}
-	  };
 
-	const toggleProjectInfo = () => {
-	  	setProjectInfoOpen(!isProjectInfoOpen);
-	}
-
-	const handleInputChange = useCallback(() => {
-        setFormChanged(true);
-    }, []);
-	
-	// по названию поля меняем значение - или инфа о договоре или коэф-ты
-	const handleOrderChange = useCallback((name: string) => (e: any) => {
-        let newValue = e.target.value;
-        setProjectInfo((projectInfo: any) => ({ ...projectInfo, [name]: newValue }));
-        handleInputChange();
-    }, [handleInputChange])
-	
-	const handlePosCreate = useCallback((id: number, name: string, price: number, value: number, measure: string, code: number, new_pos: boolean) => {
-        setPositions((positions: any[]) => {
-            const index = positions.findIndex((pos: any) => pos.id === id);
-            if (index === -1 && new_pos) {
-                return [...positions, { id, name, price, value, measure, code, new_pos }];
-            }
-        });
-        handleInputChange();
-    }, [handleInputChange])
-
-	// при смене позиции обновляем ее в базе
-	// также ищем все связанные позиции (и перемножаем их индивидуальный фин. коэф-т)
-	const handlePosChange = (id: number, fixed_id: string, measure: string, name: string, value: number, price: number) => {
-		// если позиция влияет на другие - задаем связи
-		let upd_pos: string[] = []
-		// если меняем Х то пересчитывается и ...
-		// if (fixed_id == '1_1') { upd_pos = ['1_2', '1_3', '1_4', '1_5', '1_6', '1_7', '1_8'] } // фундамент
-		// else if (fixed_id == '3_1') { upd_pos = ['2_1'] } // монтаж обв бруса
-		// else if (fixed_id == '2_3') { upd_pos = ['2_3','2_4'] } // сборка бруса
-		
-		setPositions((positions: any[]) => {
-			return positions.map((pos: any) => {
-				// обновляем саму позицию
-				if (pos.id === id) {
-					return { ...pos, measure, name, value, price }
-				}
-
-				// перебираем все другие позиции 
-				// фундамент
-				if (fixed_id === '1_1' && ['1_2', '1_3', '1_4', '1_5', '1_6', '1_7', '1_8'].includes(pos.fixed_id) ) {
-					return { ...pos, value: value }
-				}
-
-				// кл брус - 1 позиция
-				if ((fixed_id === '3_1') && ['2_1'].includes(pos.fixed_id) ) {
-					return { ...pos, value: value }
-				}
-
-				// обвяз брус - 3 позиции, сумма
-				if ((fixed_id === '3_3') && ['2_2'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_4')
-					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_5')
-					return { ...pos, value: value + pos2.value + pos3.value }
-				}
-				if ((fixed_id === '3_4') && ['2_2'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_3')
-					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_5')
-					return { ...pos, value: value + pos2.value + pos3.value }
-				}
-				if ((fixed_id === '3_5') && ['2_2'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_3')
-					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_4')
-					return { ...pos, value: value + pos2.value + pos3.value }
-				}
-
-				// обвяз брус + лаги - в антисептирование, сумма
-				if ((fixed_id === '3_1') && ['2_4'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_14')
-					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_15')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
-				}
-				if ((fixed_id === '3_14') && ['2_4'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
-					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_15')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
-				}
-				if ((fixed_id === '3_15') && ['2_4'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
-					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
-				}
-				if ((fixed_id === '3_16') && ['2_4'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
-					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_15')
-					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
-				}
-				
-				// кровля стропилы + контробрешетки + обрешетки   -  в антисеп
-				// if ((fixed_id === '5_1') && ['4_11'].includes(pos.fixed_id) ) {
-				// 	const pos2 = positions.find((pos: any) => pos.fixed_id === '5_2')
-				// 	const pos3 = positions.find((pos: any) => pos.fixed_id === '5_3')
-				// 	const pos4 = positions.find((pos: any) => pos.fixed_id === '5_4')
-				// 	return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
-				// }
-				// if ((fixed_id === '5_2') && ['4_11'].includes(pos.fixed_id) ) {
-				// 	// сумма двух позиций
-				// 	const pos2 = positions.find((pos: any) => pos.fixed_id === '5_1')
-				// 	const pos3 = positions.find((pos: any) => pos.fixed_id === '5_3')
-				// 	const pos4 = positions.find((pos: any) => pos.fixed_id === '5_4')
-				// 	return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
-				// }
-				if ((fixed_id === '5_3') && ['4_11'].includes(pos.fixed_id) ) {
-					// сумма двух позиций
-					// const pos2 = positions.find((pos: any) => pos.fixed_id === '5_1')
-					// const pos3 = positions.find((pos: any) => pos.fixed_id === '5_2')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '5_4')
-					return { ...pos, value: value + pos4.value }
-				}
-				if ((fixed_id === '5_4') && ['4_11'].includes(pos.fixed_id) ) {
-					// сумма двух позиций
-					// const pos2 = positions.find((pos: any) => pos.fixed_id === '5_1')
-					// const pos3 = positions.find((pos: any) => pos.fixed_id === '5_2')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '5_3')
-					return { ...pos, value: value + pos4.value }
-				}
-
-				// фасад Подшив свесов кровли , копия в шлифовку
-				// if ((fixed_id === '6_1') && ['6_3'].includes(pos.fixed_id) ) {
-				// 	return { ...pos, value: value }
-				// }
-				// Монтаж лобовых досок , копия в шлифовку
-				// if ((fixed_id === '6_2') && ['6_4'].includes(pos.fixed_id) ) {
-				// 	return { ...pos, value: value }
-				// }
-				
-				// КОЭФФИЦИЕНТЫ
-				// сохранить temp_val
-				// сохранить value * finalKoef
-				
-				// фасад - расх материалы ( сумма шлифовок )
-				if ((fixed_id === '6_3') && ['7_3'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_4')
-					return { ...pos, value: (value + pos2.value) }
-				}
-				// фасад - расх материалы ( сумма шлифовок )
-				if ((fixed_id === '6_4') && ['7_3'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_3')
-					return { ...pos, value:(value + pos2.value) }
-				}
-	
-				// коэффициенты k7_1_doska
-				// доска - сумма шлифовок x 0.02 x 1.2
-				if ((fixed_id === '6_3') && ['7_1'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_4')
-					// console.log('6_3[d] pos.finalKoef: ', pos.finalKoef)
-					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.ceil((value + pos2.value) * pos.finalKoef) }
-				} 
-				if ((fixed_id === '6_4') && ['7_1'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_3')
-					// console.log('6_4[d] pos.finalKoef: ', pos.finalKoef)
-					return { ...pos, valueNoKoef:(value + pos2.value), value: Math.ceil((value + pos2.value) * pos.finalKoef) }
-				}
-
-				// окраска фасада k7_2_okraska свесы кровли
-				if ((fixed_id === '6_3') && ['7_2'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_4')
-					// console.log('6_3[k] pos.finalKoef: ', pos.finalKoef)
-					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.ceil ((value + pos2.value) * pos.finalKoef )}
-					// return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
-				}
-				if ((fixed_id === '6_4') && ['7_2'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '6_3')
-					// console.log('6_4[k] pos.finalKoef: ', pos.finalKoef)
-					return { ...pos, valueNoKoef: (value + pos2.value), value: Math.ceil ((value + pos2.value) * pos.finalKoef )}
-					// return { ...pos, valueNoKoef: (value + pos2.value), value: Math.round((value + pos2.value) * pos.finalKoef * 100) / 100  }
-				}
-
-				// 9_1 окраска фасада - краска на фасад
-				if ((fixed_id === '8_1') && ['9_1'].includes(pos.fixed_id) ) {
-					// return { ...pos, value: value }
-					return { ...pos, valueNoKoef: (value), value: Math.ceil(value * pos.finalKoef) }
-					// return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
-
-				}
-				// 9_2 окраска фасада - краска на перерубы 
-				if ((fixed_id === '8_2') && ['9_2'].includes(pos.fixed_id) ) {
-					return { ...pos, valueNoKoef: (value), value: Math.ceil(value * pos.finalKoef ) }
-					// return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
-				}
-				// 9_3 расходники на окраску - сумма шлифовок
-				if ((fixed_id === '8_1') && ['9_3'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '8_2')
-					return { ...pos, value: (value + pos2.value) }
-				}
-				if ((fixed_id === '8_2') && ['9_3'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '8_1')
-					return { ...pos, value: (value + pos2.value) }
-				}
-				// 10_3 терраса - копия монтаж обрешетки на монтаж доски пола
-				if ((fixed_id === '10_2') && ['10_3'].includes(pos.fixed_id) ) {
-					return { ...pos, value: value }
-				}
-				if ((fixed_id === '10_2') && ['11_3'].includes(pos.fixed_id) ) {
-					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
-				}  
-				// утепление кровли 13_1 - 100  
-				if ((fixed_id === '12_1') && ['13_1'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_1_krov_utep100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
-				}
-				// утепление кровли 13_2 - 50  
-				if ((fixed_id === '12_3') && ['13_3'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_3_krov_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
-				}
-				// монтаж отливов - копия 
-				// if ((fixed_id === '15_7') && ['14_5'].includes(pos.fixed_id) ) {
-				// 	return { ...pos, value: value }
-				// }
-				// ПОЛЫ 1 ЭТ
-				// утепление полы 16_1 - 100  
-				if ((fixed_id === '16_5') && ['17_6'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k17_6_poli_utepl100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
-				}
-				// утепление 16_7 - 50 
-				if ((fixed_id === '16_7') && ['17_8'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k17_8_poli_utepl50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
-				// полы 1 этаж - фанера
-				if ((fixed_id === '16_9') && ['17_13'].includes(pos.fixed_id) ) {
-					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef) }
-					// return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
-				}
-				// МЕЖЕТАЖКНОЕ
-				// утепление  - 100  
-				if ((fixed_id === '18_3') && ['19_3'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k19_3_mezh_utep100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
-				}
-				// утепление  - 50 
-				if ((fixed_id === '18_5') && ['19_5'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k19_5_mezh_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
-				// фанера
-				if ((fixed_id === '18_7') && ['19_9'].includes(pos.fixed_id) ) {
-					return { ...pos, valueNoKoef: (value ), value: Math.ceil(value * pos.finalKoef) }
-					// return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
-				}
-				// ЧЕРДАЧНОЕ
-				// утепление  - 100  
-				if ((fixed_id === '20_3') && ['21_3'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k21_3_cherd_utep100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
-				}
-				// утепление  - 50 
-				if ((fixed_id === '20_5') && ['21_5'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k21_5_cherd_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
-				}
-				// АНТРЕСОЛЬ
-				// утепление  - 100  
-				if ((fixed_id === '27_3') && ['28_3'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_3_antres_utep100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
-				// утепление  - 50 
-				if ((fixed_id === '27_7') && ['28_5'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_5_antres_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
-				// фанера
-				if ((fixed_id === '27_6') && ['28_9'].includes(pos.fixed_id) ) {
-					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef) }
-					// return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
-				}
-				//  МЕЖК ПЕРЕГОРОДКИ - уткплитель
-				if ((fixed_id === '22_2') && ['23_2'].includes(pos.fixed_id) ) {
-					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_5_antres_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
-				
-				return pos
-			})
-		});
-		handleInputChange();
-	}
-
-	const handleKoefNameChange = (id: number, pos_id: number, koef_code: string, is_balancer: boolean, value: string) => {
-		let updatedKoefs: any[] = [];
-		
-		setDocKoefs((koefs: any[]) => {
-			updatedKoefs = koefs.map((koef: any) => {
-				if (koef.id === id) {
-					return { ...koef, name: value };
-				}
-				return koef;
-			});
-
-			return updatedKoefs;
-		});
-
-		handleInputChange();
-	};
-
-	const handleKoefChange = (id: number, pos_id: number, koef_code: string, is_balancer: boolean, value: any) => {
-		let updatedKoefs: any[] = [];
-
-		let newValue = value
-		if ( value !== '') {
-			newValue = parseFloat(value)
-		} 
-		
-		setDocKoefs((koefs: any[]) => {
-			updatedKoefs = koefs.map((koef: any) => {
-				if (koef.id === id) {
-					return { ...koef, value: newValue };
-				}
-				return koef;
-			});
-
-			let hasBalancer = false
-			const newKoef: number = updatedKoefs
-			.filter((koef: any) => koef.koef_code === koef_code)
-			.reduce((finalKoef: number, koef: any) => {
-				if (koef.is_balancer) {
-					hasBalancer = true
-					return finalKoef;
-					// return Math.round(finalKoef * 1 * 100) / 100;
-				}
-				if (koef.is_divider) {
-					if (koef.value == 0 || koef.value == '') return 0;
-					return finalKoef / koef.value;
-					// return Math.round(finalKoef / koef.value * 100) / 100;
-
-				}
-				return finalKoef * koef.value;
-				// return Math.round(finalKoef * koef.value * 100) / 100;
-			}, 1)
-
-			setPositions((positions: any[]) => {
-				return positions.map((pos: any) => {
-					if (pos.id === pos_id) {
-						// рассчитываем измененную позицию, в которой меняли кэфы
-						let balancerVal = 1
-						if (hasBalancer) {
-							if (is_balancer) {
-								// берем значение тек.инпута - он и есть балансер
-								balancerVal = newValue
-							} else {
-								// ищем балансер в группе кэфов
-								let balancer = docKoefs.find((koef: any) => koef.koef_code == koef_code && koef.is_balancer)
-								balancerVal = balancer.value
-							}
-							return { ...pos, value: Math.round( Math.ceil(pos.valueNoKoef * newKoef / balancerVal) * balancerVal * 100) / 100, finalKoef: newKoef }
-						} else if (pos.koef_code == 'k17_13_fanera' || 'k19_9_fanera' || 'k28_9_antres_fanera') {
-							return { ...pos, value: Math.ceil(pos.valueNoKoef * newKoef), finalKoef: newKoef }
-						} else if (pos.koef_code == 'k7_2_okraska' || 'k9_1_orkaska_fasad' || 'k9_2_orkaska_perer') {
-							return { ...pos, value: Math.ceil(pos.valueNoKoef * newKoef), finalKoef: newKoef }
-							// 7_2 9_1 9_2 k7_2_okraska  k9_1_orkaska_fasad   k9_2_orkaska_perer
-						} 
-
-						return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 100) / 100, finalKoef: newKoef }
-					}
-					return pos;
-				})
-			})
-			// console.log('finalKoef', newKoef)
-			// console.log('valueNoKoef', valueNoKoef)
-
-			return updatedKoefs;
-		});
-
-		handleInputChange();
-	};
-
-
-	// для коэф. ФИКС расход, фикс К1, К2  = используются в рассчетах ИТОГО
-	const handleKoefChangeByName = (name: string, value: any) => {
-		if (value !== '')
-			value = parseFloat(value)
-		let updatedKoefs: any[] = [];
-		setDocKoefs((koefs: any[]) => {
-			updatedKoefs = koefs.map((koef: any) => {
-				if (koef.name === name) {
-					return { ...koef, value };
-				}
-				return koef;
-			});
-			return updatedKoefs;
-		});		
-		handleInputChange();
-	}
 
 	useEffect(() => {
 		if(positions) {
@@ -666,12 +246,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 		new_pos: true
 	}
 	
-	const createPosition = (code: number) => {
-		handlePosCreate(newPos.id, newPos.name, newPos.price, newPos.value, newPos.measure, code, newPos.new_pos)
-	}
-	const getFirstTwoWords = (str: string) => {
-		return str.split(' ').slice(0, 2).join(' ');
-	};
+
 
 	const getTillComa = (str: string) => {
 		return str.split(',').slice(0, 1);
@@ -1217,7 +792,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					})()}
 
 					{positions && (() => {
-					const position = positions.find((pos:any) => pos.fixed_id === '22_3')
+					const position = positions.find((pos:any) => pos.fixed_id === '22_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Пароизоляционная пленка Изоспан В, проклейка швов</li>
 					) : null;

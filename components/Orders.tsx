@@ -1,6 +1,6 @@
 'use client'
 
-import { dbGetProjects } from '@/actions/Db'
+import { dbDeleteDoc, dbGetProjects } from '@/actions/Db'
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -18,6 +18,8 @@ const Orders = ( {user_id}: any ) => {
 	const handleConfirm = async() => {
 		setShowConfirmModal(false)
 		await dbCloneDoc();
+		// await dbDeleteDoc();
+
 		window.location.href = `/`;
 	}
 

@@ -275,7 +275,7 @@ export const dbUpdateProjectInfo = async (project: any, editor_id: any) => {
 	// Найти самый новый документ
 	const latestDoc = await prisma.doc.findFirst({
 		orderBy: {
-			id: 'desc',
+			id: 'asc', 
 		},
 		include: {
 			fields: true,
