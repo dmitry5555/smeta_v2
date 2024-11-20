@@ -116,96 +116,131 @@ export const dbGetKoefs = async (docId: number) => {
 	return data
 }
 
+export const dbUpdateProjectInfo = async (project_id: number, client: string, description: string, dog_num: string, location: string, name: string, phone1: string, editor_id: number) => {
+	try{
+		await prisma.doc.update({
+			where: {
+				id: project_id as number,
+			},
+			data: {
+				client,
+				description,
+				dog_num,
+				location,
+				name,
+				phone1,
+				updatedAt: new Date(),
+			},
+		})
+		return true
+	} catch (error) {
+		return false
+	}
+};
 
-export const dbUpdateProjectInfo = async (project: any, editor_id: any) => {
-	const updatedProject = await prisma.doc.update({
-	  where: {
-		id: project.id,
-	  },
-	  data: {
-		// Обновляем основные поля документа
-		...project,
-		updatedAt: new Date(),
-		userId: Number(editor_id),
-		fields: {
-		  set: project.fields,
-		},
-	  },
-	  include: {
-		fields: false,
-	  },
-	});
-	return updatedProject;
-	console.log (updatedProject)
-  };
 
-  
+// export const dbUpdateProjectInfo = async (project: any, editor_id: any) => {
+// 	try{
+// 		await prisma.doc.update({
+// 			where: {
+// 				id: project.id,
+// 			},
+// 			data: {
+// 				...project,
+// 				updatedAt: new Date(),
+// 				userId: Number(editor_id),
+// 				fields: {
+// 					set: project.fields,
+// 				},
+// 			},
+// 			include: {
+// 				fields: false,
+// 			},
+// 		});
+
+// 		return true;
+// 	} catch (error) {
+// 		return false;
+// 	}
+// }
+
+
   export const dbUpdateKoefs = async (koefs: any[]) => {
-	return await prisma.$transaction(async (tx) => {
-		const updatePromises = koefs.map(koef => {
-			return tx.koef.update({
-				where: { id: koef.id },
-				data: {
-					name: koef.name,
-					value: koef.value
-				}
+	try {
+		await prisma.$transaction(async (tx) => {
+			const updatePromises = koefs.map(koef => {
+				return tx.koef.update({
+					where: { id: koef.id },
+					data: {
+						name: koef.name,
+						value: koef.value
+					}
+				});
 			});
+			await Promise.all(updatePromises);
 		});
-		await Promise.all(updatePromises);
-	});
+		return true;
+	} catch (error) {
+		return false;
+	}
   };
 
   export const dbUpdatePositions = async (docId: number, fields: any[]) => {
-	return await prisma.$transaction(async (tx) => {
-	  const updatePromises = fields.map(field => {
-		if (field.new_pos) {
-		  // Создаем новую запись, если id == 0 и name не пустой
-		  if (field.name && field.name.trim() !== '') {
-			return tx.field.create({
-			  data: {
-				id: undefined,
-				docId: docId,
-				code: String(field.code),
-				name: field.name,
-				measure: field.measure,
-				value: field.value,
-				price: field.price,
-				// Добавьте другие необходимые поля здесь
-			  }
+	try{
+		await prisma.$transaction(async (tx) => {
+		const updatePromises = fields.map(field => {
+			if (field.new_pos) {
+				// Создаем новую запись, если id == 0 и name не пустой
+				if (field.name && field.name.trim() !== '') {
+					return tx.field.create({
+					data: {
+						id: undefined,
+						docId: docId,
+						code: String(field.code),
+						name: field.name,
+						measure: field.measure,
+						value: field.value,
+						price: field.price,
+						// Добавьте другие необходимые поля здесь
+					}
+					});
+				} else {
+					// Если name пустой, не создаем новую запись
+					return Promise.resolve();
+				}
+				} else {
+				if (field.name && field.name.trim() !== '') {
+					// Обновляем существующую запись, если name не пустой
+					return tx.field.update({
+					where: { id: field.id },
+					data: {
+						// code: field.code,
+						name: field.name,
+						measure: field.measure,
+						value: field.value,
+						price: field.price,
+						finalKoef: field.finalKoef,
+						valueNoKoef: field.valueNoKoef,
+						updatedAt: new Date()
+						// Добавьте другие обновляемые поля здесь
+					}
+					});
+				} else if (!field.secured) {
+					// Удаляем запись, если это позиция не secured
+					return tx.field.delete({
+					where: { id: field.id }
+					});
+				}
+				}
 			});
-		  } else {
-			// Если name пустой, не создаем новую запись
-			return Promise.resolve();
-		  }
-		} else {
-		  if (field.name && field.name.trim() !== '') {
-			// Обновляем существующую запись, если name не пустой
-			return tx.field.update({
-			  where: { id: field.id },
-			  data: {
-				// code: field.code,
-				name: field.name,
-				measure: field.measure,
-				value: field.value,
-				price: field.price,
-				finalKoef: field.finalKoef,
-				valueNoKoef: field.valueNoKoef,
-				updatedAt: new Date()
-				// Добавьте другие обновляемые поля здесь
-			  }
-			});
-		  } else if (!field.secured) {
-			// Удаляем запись, если это позиция не secured
-			return tx.field.delete({
-			  where: { id: field.id }
-			});
-		  }
-		}
-	  });
-  
-	  await Promise.all(updatePromises);
-	  // return await tx.field.findMany({ where: { docId } });
-	});
+		
+			await Promise.all(updatePromises);
+			// return await tx.field.findMany({ where: { docId } });
+		});
+		return true;
+	} catch (error) {
+		return false;
+	}
   };
 
 

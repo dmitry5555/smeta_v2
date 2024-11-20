@@ -8,10 +8,9 @@ import { useCallback, useEffect, useState, memo } from 'react'
 import Position from './Position'
 import Koef from './Koef'
 
-
 const Order = memo(({proj_id, user_id}: any) => { 
 	const [visibleKoefs, setVisibleKoefs] = useState<{ [key: string]: boolean }>({});
-	const [formChanged, setFormChanged] = useState(false)
+	const [formChanged, setFormChanged] = useState(Number)
 	const [isProjectInfoOpen, setProjectInfoOpen] = useState(true)
 	const [projectInfo, setProjectInfo] = useState<any | null>(null)
 	const [positions, setPositions] = useState<any | null>(null)
@@ -39,25 +38,32 @@ const Order = memo(({proj_id, user_id}: any) => {
 
 	const saveProject = async () => {
 		try {
-			setFormChanged(false)
-			const updateProject = await dbUpdateProjectInfo(projectInfo, user_id);
-			const updatePositions = await dbUpdatePositions(projectInfo.id, positions);
-			const updateKoefs = await dbUpdateKoefs(docKoefs);
-			// console.log('Project updated successfully:', updateProject);
-			// console.log('Positions updated successfully:', updatePositions);
-			// console.log('Koefs updated successfully:', updateKoefs);
-			window.location.href = `/project/${projectInfo.id}`;
+			// console.log('projectInfo: ', projectInfo)
+			// const updateProject = await dbUpdateProjectInfo(projectInfo, user_id)
+			setFormChanged(3)
+			const updateProject = await dbUpdateProjectInfo(projectInfo.id, projectInfo.client, projectInfo.description, projectInfo.dog_num, projectInfo.location, projectInfo.name, projectInfo.phone1, user_id)
+			console.log('Project updated successfully:', updateProject)
+			const updatePositions = await dbUpdatePositions(projectInfo.id, positions)
+			console.log('Positions updated:', updatePositions)
+			const updateKoefs = await dbUpdateKoefs(docKoefs)
+			console.log('Koefs updated:', updateKoefs)
+			if(updateProject && updatePositions && updateKoefs) {
+				setFormChanged(0)
+			} else {
+				setFormChanged(2)
+			}
+			// window.location.href = `/project/${projectInfo.id}`;
 		} catch (error) {
 		  	console.error('Error updating project:', error);
 		}
-	  };
+	};
 
 	const toggleProjectInfo = () => {
 	  	setProjectInfoOpen(!isProjectInfoOpen);
 	}
 	
 	const handleInputChange = useCallback(() => {
-        setFormChanged(true);
+        setFormChanged(1);
     }, []);
 	
 	// по названию поля меняем значение - или инфа о договоре или коэф-ты
@@ -669,6 +675,8 @@ const Order = memo(({proj_id, user_id}: any) => {
 								<Cog6ToothIcon className='w-5' />
 							</div>
 							<button onClick={saveProject} className='text-white px-3 py-2 text-sm border border-transparent font-semibold bg-blue-600 rounded-lg disabled:opacity-40' disabled={!formChanged}>Сохранить</button>
+							{formChanged === 2 && <div className='my-auto'>⚠️</div>}
+							{formChanged === 3 && <div className='my-auto'>⏱️</div>}
 						</div>
 					</div>
 					<div id='project-info' className={`border border-b-0 flex flex-col px-6 pt-6 pb-8 text-sm gap-4 transition-all duration-500 ease-in-out ${isProjectInfoOpen ? 'hidden' : ''}`}>

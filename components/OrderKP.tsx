@@ -261,7 +261,6 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 
 			<div className='bg-white flex flex-col max-w-screen-md mx-auto w-full mb-6 py-8'>
 
-				{/* <button onClick={generateDocFromDiv}>Сохранить как DOCX</button> */}
 				<div id='content' className='text-md leading-5 flex flex-col py-4 w-full px-4'>
 
 					{/* Этап — Фундамент */}
