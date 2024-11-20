@@ -24,7 +24,7 @@ model Users {
   password  String
   name      String?
   role 		String
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now())x
   updatedAt DateTime @updatedAt
   fields	Doc[]
 }
