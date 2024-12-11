@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { dbCloneDoc, dbDeleteDoc, dbLogout } from '@/actions/Db'
+import { dbLogout } from '@/actions/Db'
 // import { cookies } from 'next/headers'
 // import { redirect } from 'next/navigation'
 import { useState } from 'react'

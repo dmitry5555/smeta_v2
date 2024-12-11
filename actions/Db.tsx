@@ -307,7 +307,7 @@ export const dbUpdateProjectInfo = async (project_id: number, client: string, de
   // export const dbDeleteDoc = async (docId: number) => {
   export const dbDeleteDoc = async () => {
   
-	// Найти самый новый документ
+	// desc - сверху asc - снизу
 	const latestDoc = await prisma.doc.findFirst({
 		orderBy: {
 			id: 'asc', 

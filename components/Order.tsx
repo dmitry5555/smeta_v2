@@ -132,27 +132,27 @@ const Order = memo(({proj_id, user_id}: any) => {
 				if ((fixed_id === '3_1') && ['2_4'].includes(pos.fixed_id) ) {
 					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_14')
 					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_15')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+					// const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
+					return { ...pos, value: value + pos2.value + pos3.value }
 				}
 				if ((fixed_id === '3_14') && ['2_4'].includes(pos.fixed_id) ) {
 					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
 					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_15')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+					// const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
+					return { ...pos, value: value + pos2.value + pos3.value }
 				}
 				if ((fixed_id === '3_15') && ['2_4'].includes(pos.fixed_id) ) {
 					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
 					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+					// const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
+					return { ...pos, value: value + pos2.value + pos3.value }
 				}
-				if ((fixed_id === '3_16') && ['2_4'].includes(pos.fixed_id) ) {
-					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
-					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
-					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_15')
-					return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
-				}
+				// if ((fixed_id === '3_16') && ['2_4'].includes(pos.fixed_id) ) {
+				// 	const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
+				// 	const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
+				// 	const pos4 = positions.find((pos: any) => pos.fixed_id === '3_15')
+				// 	return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
+				// }
 				
 				// кровля стропилы + контробрешетки + обрешетки   -  в антисеп
 				// if ((fixed_id === '5_1') && ['4_11'].includes(pos.fixed_id) ) {
@@ -265,13 +265,13 @@ const Order = memo(({proj_id, user_id}: any) => {
 				// утепление кровли 13_1 - 100  
 				if ((fixed_id === '12_1') && ['13_1'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_1_krov_utep100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 }
 					// return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
 				}
 				// утепление кровли 13_2 - 50  
 				if ((fixed_id === '12_3') && ['13_3'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k13_3_krov_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value) * balancer.value * 1000) / 1000 }
 				}
 				// монтаж отливов - копия 
 				// if ((fixed_id === '15_7') && ['14_5'].includes(pos.fixed_id) ) {
@@ -281,27 +281,27 @@ const Order = memo(({proj_id, user_id}: any) => {
 				// утепление полы 16_1 - 100  
 				if ((fixed_id === '16_5') && ['17_6'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k17_6_poli_utepl100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 }
 				}
 				// утепление 16_7 - 50 
 				if ((fixed_id === '16_7') && ['17_8'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k17_8_poli_utepl50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 }				}
 				// полы 1 этаж - фанера
 				if ((fixed_id === '16_9') && ['17_13'].includes(pos.fixed_id) ) {
-					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef) }
+					return { ...pos, valueNoKoef: (value ), value: Math.ceil(value * pos.finalKoef) }
 					// return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
 				}
 				// МЕЖЕТАЖКНОЕ
 				// утепление  - 100  
 				if ((fixed_id === '18_3') && ['19_3'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k19_3_mezh_utep100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 }	
 				}
 				// утепление  - 50 
 				if ((fixed_id === '18_5') && ['19_5'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k19_5_mezh_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }				}
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 }				}
 				// фанера
 				if ((fixed_id === '18_7') && ['19_9'].includes(pos.fixed_id) ) {
 					return { ...pos, valueNoKoef: (value ), value: Math.ceil(value * pos.finalKoef) }
@@ -311,35 +311,35 @@ const Order = memo(({proj_id, user_id}: any) => {
 				// утепление  - 100  
 				if ((fixed_id === '20_3') && ['21_3'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k21_3_cherd_utep100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 }	
 				}
 				// утепление  - 50 
 				if ((fixed_id === '20_5') && ['21_5'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k21_5_cherd_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 }	
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 }	
 				}
 				// АНТРЕСОЛЬ
 				// утепление  - 100  
 				if ((fixed_id === '27_3') && ['28_3'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_3_antres_utep100' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 } }
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 } }
 				// утепление  - 50 
 				if ((fixed_id === '27_7') && ['28_5'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k28_5_antres_utep50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 } }
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 } }
 				// фанера
 				if ((fixed_id === '27_6') && ['28_9'].includes(pos.fixed_id) ) {
-					return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef) }
+					return { ...pos, valueNoKoef: (value ), value: Math.ceil(value * pos.finalKoef) }
 					// return { ...pos, valueNoKoef: (value ), value: Math.round(value * pos.finalKoef * 100) / 100 }
 				}
 				//  МЕЖК ПЕРЕГОРОДКИ - уткплитель
 				if ((fixed_id === '22_2') && ['23_2'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k23_2_utepl' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 } }
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 } }
 				//  МЕЖК ПЕРЕГОРОДКИ - уткплитель 50
 				if ((fixed_id === '22_3') && ['23_10'].includes(pos.fixed_id) ) {
 					const balancer = docKoefs.find((koef: any) => koef.koef_code == 'k23_2_utepl_50' && koef.is_balancer)
-					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 100) / 100 } }
+					return { ...pos, valueNoKoef: (value), value: Math.round( Math.ceil(value * pos.finalKoef / balancer.value ) * balancer.value * 1000) / 1000 } }
 
 				return pos
 			})
@@ -407,6 +407,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 					if (pos.id === pos_id) {
 						// рассчитываем измененную позицию, в которой меняли кэфы
 						let balancerVal = 1
+						
 						if (hasBalancer) {
 							if (is_balancer) {
 								// берем значение тек.инпута - он и есть балансер
@@ -417,9 +418,9 @@ const Order = memo(({proj_id, user_id}: any) => {
 								balancerVal = balancer.value
 							}
 							// console.log('CASE-1') // skipping
-							return { ...pos, value: Math.round( Math.ceil(pos.valueNoKoef * newKoef / balancerVal) * balancerVal * 100) / 100, finalKoef: newKoef } // orig
+							return { ...pos, value: Math.round( Math.ceil(pos.valueNoKoef * newKoef / balancerVal) * balancerVal * 1000) / 1000, finalKoef: newKoef } // orig
 						} else if (pos.koef_code == 'k11_3_doska' || pos.koef_code == 'k7_1_fasad_doska') {
-							return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 100) / 100, finalKoef: newKoef }
+							return { ...pos, value: Math.round(pos.valueNoKoef * newKoef * 1000) / 1000, finalKoef: newKoef }
 						}
 						// else if (pos.koef_code == 'k17_13_fanera' || pos.koef_code == 'k19_9_fanera' || pos.koef_code == 'k28_9_antres_fanera' ||
 						// 	pos.koef_code == 'k7_2_okraska' || pos.koef_code ==  'k9_1_orkaska_fasad'|| pos.koef_code == 'k9_2_orkaska_perer') {
@@ -516,16 +517,17 @@ const Order = memo(({proj_id, user_id}: any) => {
 				
 				// ЧАСТЬ 1 РАСЧЕТ
 				const korobka_itogo_rab = sum2_1 + sum4_1
-				const korobka_zp_tehno_bf = sum4_1 + sum3_1
-				const korob_itogo_mat_sn = Math.round(korobka_zp_tehno_bf * koef1)
+				const korobka_itogo_mat_bn =  sum3_1 + sum5_1
+				// const korobka_zp_tehno_bf = sum4_1 + sum3_1
+				const korob_itogo_mat_sn = Math.round(korobka_itogo_mat_bn * koef1)
 				const korob_raboty_rab = korobka_itogo_rab * 0.6
-				const korob_prib_s_mat = Math.round(korobka_zp_tehno_bf * koef1) - korobka_zp_tehno_bf
+				const korob_prib_s_mat = Math.round(korobka_itogo_mat_bn * koef1) - korobka_itogo_mat_bn
 				const korob_prib_s_rab = sum2_1 + sum4_1 - korob_raboty_rab
 				const korobka_itogo_rab_bez_f = sum2_1 + sum4_1 + korob_itogo_mat_sn
 				const korobka_itogo_rab_s_f = sum2_1 + sum4_1 + korob_itogo_mat_sn + sum1_7
 
-				const korob_korob_nalog_bf =  (sum2_1) + (sum4_1) + (korob_itogo_mat_sn) - (korobka_zp_tehno_bf) - (rashReal1)
-				const korob_nalog =  Math.round(korob_korob_nalog_bf * 0.075)
+				const korob_korob_nalog_bf =  korobka_itogo_rab + korob_itogo_mat_sn - korobka_itogo_mat_bn - rashReal1
+				const korob_nalog =  Math.round(korob_korob_nalog_bf * 0.15)
 				const korob_nalog_sf = (korob_nalog) + (sum1_9)
 
 				const korob_zp_magager_sf = Math.round(korobka_itogo_rab_s_f * 0.01)
@@ -533,8 +535,8 @@ const Order = memo(({proj_id, user_id}: any) => {
 				const korob_zp_magager_bf = Math.round(korobka_itogo_rab_bez_f * 0.01)
 				const korob_zp_tehno_bf = Math.round(korobka_itogo_rab_bez_f * 0.01)
 
-				const prib_bez_fund = Math.round(korobka_itogo_rab_bez_f - korob_nalog - rashReal1 - korob_raboty_rab - korobka_zp_tehno_bf - korob_zp_magager_bf - korob_zp_tehno_bf)
-				const prib_s_fund = Math.round(korobka_itogo_rab_s_f - korob_nalog_sf - rashReal1 - korob_raboty_rab - korobka_zp_tehno_bf - sum1_5 - korob_zp_magager_sf - korob_zp_tehno_sf)
+				const prib_bez_fund = Math.round(korobka_itogo_rab_bez_f - korobka_itogo_mat_bn - korob_raboty_rab - rashReal1 - korob_nalog  )
+				const prib_s_fund = Math.round(korobka_itogo_rab_s_f - korobka_itogo_mat_bn - korob_raboty_rab - rashReal1 - korob_nalog_sf - sum1_1 - sum1_2 - sum1_3  )
 
 
 				// ФАСАД
@@ -578,7 +580,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				const okna_itogo =  sum12_1 + Math.round(sum13_1 * koef2) + sum14_1 + Math.round(sum15_1 * koef2)
 				const perekr_itogo =  sum16_1 + Math.round(sum17_1 * koef2) + sum18_1 + Math.round(sum19_1 * koef2) + sum20_1 + Math.round(sum21_1 * koef2) + sum27_1 + Math.round(sum28_1 * koef2)
 				const mkperekr_itogo = sum22_1 + Math.round(sum23_1 * koef2)
-				const nakladnie_itogo = sum24_1 + sum25_1 + sum26_1
+				const nakladnie_itogo = sum24_1 + sum25_1 - sum26_1
 
 				// ЧАСТЬ 2 ИТОГО
 				const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
@@ -589,7 +591,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				const prib_s_mat = itogo_mat_sn - itogo_mat_v_tk_bn
 				const prib_s_rab = itogo_rab_v_tk - raboty_rabotnikov
 
-				const itogo_rab_i_mat_po_dog_vtk = itogo_rab_v_tk + itogo_mat_sn
+				const itogo_rab_i_mat_po_dog_vtk = itogo_rab_v_tk + itogo_mat_sn + mat_bez_chekov
 				const itogo_rab_po_dog_vtk_pod_krish_bez_fund =  itogo_rab_i_mat_po_dog_vtk + korobka_itogo_rab_bez_f +  mat_bez_chekov
 				const itogo_rab_po_dog_vtk_pod_krish_s_fund = itogo_rab_po_dog_vtk_pod_krish_bez_fund + sum1_7
 				
@@ -611,7 +613,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				const itogo_rabot_minus_sebest = Math.round(itogo_rab_po_dog_vtk_pod_krish_s_fund - sebest_v_tk_sf)
 
 				setSums({ sum1_1, sum1_2, sum1_3, sum1_4, sum1_5, sum1_6, sum1_7, sum1_8, sum1_9, sum1_10, sum2_1, sum3_1, sum4_1, sum5_1, sum5_2, 
-					korobka_itogo_rab, korobka_zp_tehno_bf, korob_itogo_mat_sn, korob_raboty_rab, korob_prib_s_mat, korob_prib_s_rab, korobka_itogo_rab_bez_f, korobka_itogo_rab_s_f,
+					korobka_itogo_rab, korobka_itogo_mat_bn, korob_itogo_mat_sn, korob_raboty_rab, korob_prib_s_mat, korob_prib_s_rab, korobka_itogo_rab_bez_f, korobka_itogo_rab_s_f,
 					korob_korob_nalog_bf, korob_nalog, korob_nalog_sf, korob_zp_magager_sf, korob_zp_tehno_sf, korob_zp_magager_bf, korob_zp_tehno_bf, prib_bez_fund, prib_s_fund,
 					fasad_itogo, okna_itogo, perekr_itogo, mkperekr_itogo, nakladnie_itogo,
 					sum6_1, sum7_1, sum8_1, sum9_1, sum10_1, sum11_1, sum12_1, sum13_1, sum14_1, sum15_1, sum16_1, sum17_1, sum18_1, sum19_1, sum20_1, sum21_1, sum22_1, sum23_1, sum24_1, sum25_1, sum26_1, sum27_1, sum28_1,
@@ -817,7 +819,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{/* 2. Этап — Стеновой комплект */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Стеновой комплект</div>
+					<div className='mx-auto'>Стеновой комплект - Работы</div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 2).map((position: any, index: any) => (
@@ -897,13 +899,17 @@ const Order = memo(({proj_id, user_id}: any) => {
 						<div className='w-3/12 my-auto' id=''>{sums.sum3_1}</div>
 					</div>
 					</>}
+					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов и работ:</div>
+						<div className='w-3/12 my-auto' id=''>{sums.sum2_1 + Math.round(sums.sum3_1 * sums.koef1)}</div>
+					</div>
 				</>	
 				}
 
 				{/* Этап 3 - Кровля */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Кровля</div>
+					<div className='mx-auto'>Кровля - Работы</div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 4).map((position: any, index: any) => (
@@ -977,12 +983,16 @@ const Order = memo(({proj_id, user_id}: any) => {
 				<>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов:</div>
-						<div className='w-3/12 my-auto' id=''>{Math.round(sums.sum4_1 * sums.koef1)}</div>
+						<div className='w-3/12 my-auto' id=''>{Math.round(sums.sum5_1 * sums.koef1)}</div>
 					</div>
 					{user_id == 1 && <div className='bg-slate-50'>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6 ' >
 						<div className='w-9/12 my-auto text-right font-bold'>Материалы кровли без наценки :</div>
-						<div className='w-3/12 my-auto' id=''>{sums.sum4_1}</div>
+						<div className='w-3/12 my-auto' id=''>{sums.sum5_1}</div>
+					</div>
+					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов и работ:</div>
+						<div className='w-3/12 my-auto' id=''>{sums.sum4_1 + Math.round(sums.sum5_1 * sums.koef1)}</div>
 					</div>
 					{/* <div className='flex flex-row w-full px-5 py-4  border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>---</div>
@@ -996,7 +1006,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 					</div>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов без наценки:</div>
-						<div className='w-3/12 my-auto' id=''>{sums.korobka_zp_tehno_bf}</div>
+						<div className='w-3/12 my-auto' id=''>{sums.korobka_itogo_mat_bn}</div>
 					</div>
 					<div className='flex flex-row w-full px-5 py-2 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Наценка:</div>
@@ -1045,7 +1055,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 						<div className='w-3/12 my-auto' id=''>{sums.korobka_itogo_rab_bez_f}</div>
 					</div>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Итого работ по договру + фундамент:</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Итого работ по договору + фундамент:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.korobka_itogo_rab_s_f}</div>
 					</div>
 					{user_id == 1 && <div className='bg-slate-50'>
@@ -1091,40 +1101,40 @@ const Order = memo(({proj_id, user_id}: any) => {
 					</div>
 					</div>}
 
-					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+					{/* <div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Зараплата менеджера с учетом фундамента:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.korob_zp_magager_sf}</div>
-					</div>
-					{user_id == 1 && <>
+					</div> */}
+					{/* {user_id == 1 && <>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6 bg-slate-50' >
 						<div className='w-9/12 my-auto text-right font-bold'>Зарплата технодзора с учетом фундамента:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.korob_zp_tehno_sf}</div>
 					</div>
-					</>}
-					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+					</>} */}
+					{/* <div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Зараплата менеджера без учета фундамента:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.korob_zp_magager_bf}</div>
-					</div>
-					{user_id == 1 && <>
+					</div> */}
+					{/* {user_id == 1 && <>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6 bg-slate-50' >
 						<div className='w-9/12 my-auto text-right font-bold'>Зарплата технодзора без учета фундамента :</div>
 						<div className='w-3/12 my-auto' id=''>{sums.korob_zp_tehno_bf}</div>
 					</div>
-					</>}
+					</>} */}
 				</>	
 				}
 				
 
 			{/* Фасад */}
-				{positions &&
+				{/* {positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Фасад</div>
-				</div>}
+					<div className='mx-auto'>Фасад - </div>
+				</div>} */}
 
 				{/* Этап 1 - Свесы кровли работы  */}
 
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Свесы кровли работы</div>
+					<div className='mx-auto'>Свесы кровли - Работы</div>
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 6).map((position: any, index: any) => (
@@ -1214,7 +1224,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{/* Этап 2 - Окраска фасада   */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Окраска фасада </div>
+					<div className='mx-auto'>Окраска фасада - Работы</div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 8).map((position: any, index: any) => (
@@ -1303,7 +1313,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{/* Этап 3 - Терраса */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Терраса </div>
+					<div className='mx-auto'>Терраса - Работы</div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 10).map((position: any, index: any) => (
@@ -1383,24 +1393,24 @@ const Order = memo(({proj_id, user_id}: any) => {
 						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов и работ:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.sum10_1 + Math.round(sums.sum11_1 * sums.koef2)}</div>
 					</div>
-					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+					{/* <div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Итого фасад:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.fasad_itogo}</div>
-					</div>
+					</div> */}
 				</>	
 				}
 
 		
 			{/* Окна и утепления кровли */}
-				{positions &&
+				{/* {positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Окна и утепления кровли </div>
-				</div>}
+				</div>} */}
 				
 				{/* Этап 1 - Утепления кровли */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Утепления кровли </div>
+					<div className='mx-auto'>Утепления кровли - Работы</div>
 				</div> }
 
 				{positions && positions.filter((position: any) => position.code == 12).map((position: any, index: any) => (
@@ -1486,7 +1496,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{/* Этап 2 - Двери Окна */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Двери Окна </div>
+					<div className='mx-auto'>Двери Окна - Работы</div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 14).map((position: any, index: any) => (
@@ -1567,22 +1577,22 @@ const Order = memo(({proj_id, user_id}: any) => {
 						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов и работ:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.sum14_1 + Math.round(sums.sum15_1 * sums.koef2)}</div>
 					</div>
-					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+					{/* <div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Итого окна и утепления кровли:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.okna_itogo }</div>
-					</div>
+					</div> */}
 				</>	
 				}
 
 			{/* Перекрытия */}
-				{positions &&
+				{/* {positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Перекрытия </div>
-				</div>}
+					<div className='mx-auto'>Перекрытия - Работы</div>
+				</div>} */}
 			
 				{/* Этап 1 - Полы 1 этаж  */}
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Полы 1 этаж  </div>
+					<div className='mx-auto'>Полы 1 этаж - Работы </div>
 				</div>
 
 				{positions && positions.filter((position: any) => position.code == 16).map((position: any, index: any) => (
@@ -1670,7 +1680,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{/* Этап 2 - Межэтажное перекрытия  */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Межэтажное перекрытия  </div>
+					<div className='mx-auto'>Межэтажное перекрытия - Работы </div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 18).map((position: any, index: any) => (
@@ -1758,7 +1768,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{/* Этап 3 - Чердачное перекрытия   */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Чердачное перекрытия  </div>
+					<div className='mx-auto'>Чердачное перекрытия - Работы </div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 20).map((position: any, index: any) => (
@@ -1847,7 +1857,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{/* Этап 4 - Перекрытия антресоль */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Перекрытия антресоль </div>
+					<div className='mx-auto'>Перекрытия антресоль - Работы </div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 27).map((position: any, index: any) => (
@@ -1928,23 +1938,23 @@ const Order = memo(({proj_id, user_id}: any) => {
 						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов и работ:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.sum27_1 + Math.round(sums.sum28_1 * sums.koef2)}</div>
 					</div>
-					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+					{/* <div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Итого перекрытия:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.perekr_itogo}</div>
-					</div>
+					</div> */}
 				</>	
 				}
 
 				{/* Перегородки */}
-				{positions &&
+				{/* {positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
 					<div className='mx-auto'>Перегородки </div>
-				</div>}
+				</div>} */}
 
 				{/* Этап 1 - Межкомнатные перегородки   */}
 				{positions &&
 				<div className='flex flex-row w-full px-5 py-3 border border-t-0 text-lg font-semibold'>
-					<div className='mx-auto'>Межкомнатные перегородки  </div>
+					<div className='mx-auto'>Межкомнатные перегородки - Работы </div>
 				</div>}
 
 				{positions && positions.filter((position: any) => position.code == 22).map((position: any, index: any) => (
@@ -2058,7 +2068,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{positions && sums && 
 				<>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Итого:</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Итого инженерные коммуникации:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.sum29_1}</div>
 					</div>
 				</>	
@@ -2100,7 +2110,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{positions && sums && 
 				<>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Итого доставки:</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Итого доставка:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.sum24_1}</div>
 					</div>
 				</>	
@@ -2137,7 +2147,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{positions && sums && 
 				<>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Итого:</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Итого проживание, питание:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.sum25_1}</div>
 					</div>
 				</>	
@@ -2174,7 +2184,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				{positions && sums && 
 				<>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Итого:</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Итого скидки:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.sum26_1}</div>
 					</div>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
@@ -2243,11 +2253,11 @@ const Order = memo(({proj_id, user_id}: any) => {
 						<div className='w-3/12 my-auto' id=''>{sums.itogo_rab_i_mat_po_dog_vtk}</div>
 					</div>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Итого работ по договру теплый контур+под крышу без фундамента:</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Итого работ по договору теплый контур+под крышу без фундамента:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.itogo_rab_po_dog_vtk_pod_krish_bez_fund}</div>
 					</div>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Итого работ по договру теплый котур+под крышу с фунаментом:</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Итого работ по договору теплый котур+под крышу с фунаментом:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.itogo_rab_po_dog_vtk_pod_krish_s_fund}</div>
 					</div>
 
