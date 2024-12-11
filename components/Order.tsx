@@ -985,15 +985,16 @@ const Order = memo(({proj_id, user_id}: any) => {
 						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов:</div>
 						<div className='w-3/12 my-auto' id=''>{Math.round(sums.sum5_1 * sums.koef1)}</div>
 					</div>
+					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов и работ:</div>
+						<div className='w-3/12 my-auto' id=''>{sums.sum4_1 + Math.round(sums.sum5_1 * sums.koef1)}</div>
+					</div>
 					{user_id == 1 && <div className='bg-slate-50'>
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6 ' >
 						<div className='w-9/12 my-auto text-right font-bold'>Материалы кровли без наценки :</div>
 						<div className='w-3/12 my-auto' id=''>{sums.sum5_1}</div>
 					</div>
-					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Итого материалов и работ:</div>
-						<div className='w-3/12 my-auto' id=''>{sums.sum4_1 + Math.round(sums.sum5_1 * sums.koef1)}</div>
-					</div>
+					
 					{/* <div className='flex flex-row w-full px-5 py-4  border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>---</div>
 						<div className='w-3/12 my-auto' id=''></div>
