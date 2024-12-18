@@ -324,7 +324,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '3_3')
 					return position && position.value > 0 ? (
-						<li key={position.id}>{getTillComa(position.name)}</li>
+						<li key={position.id}>Клееный брус</li>
 					) : null;
 					})()}
 
@@ -389,7 +389,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '3_2')
 					return position && position.value > 0 ? (
-						<li key={position.id}>Антисептик-консервант невымываемый NEOMID 430</li>
+						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
@@ -945,9 +945,9 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					})()}
 					
 					{positions && (() => {
-					const position = positions.find((pos:any) => pos.fixed_id === '20_4')
+					const position = positions.find((pos:any) => pos.fixed_id === '21_4')
 					return position && position.value > 0 ? (
-						<li key={position.id}>123 {position.name}</li>
+						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 					
