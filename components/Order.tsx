@@ -583,8 +583,14 @@ const Order = memo(({proj_id, user_id}: any) => {
 				const nakladnie_itogo = sum24_1 + sum25_1 - sum26_1
 
 				// ЧАСТЬ 2 ИТОГО
+
+				// 27_1 работы антресоль
 				const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
-				const itogo_mat_v_tk_bn = sum23_1 + sum21_1 + sum19_1 + sum17_1 + sum15_1 + sum13_1 + sum11_1 + sum9_1 + sum7_1
+				// const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
+
+				// 29_1 инженерные коммуникации 28_1 материалы антресоль
+				const itogo_mat_v_tk_bn = sum29_1 + sum28_1 + sum23_1 + sum21_1 + sum19_1 + sum17_1 + sum15_1 + sum13_1 + sum11_1 + sum9_1 + sum7_1
+				// const itogo_mat_v_tk_bn = sum23_1 + sum21_1 + sum19_1 + sum17_1 + sum15_1 + sum13_1 + sum11_1 + sum9_1 + sum7_1
 				const itogo_mat_sn = Math.round(itogo_mat_v_tk_bn * koef2)
 				const mat_bez_chekov = nakladnie_itogo
 				const raboty_rabotnikov =  Math.round(itogo_rab_v_tk * 0.6)
@@ -592,7 +598,9 @@ const Order = memo(({proj_id, user_id}: any) => {
 				const prib_s_rab = itogo_rab_v_tk - raboty_rabotnikov
 
 				const itogo_rab_i_mat_po_dog_vtk = itogo_rab_v_tk + itogo_mat_sn + mat_bez_chekov
-				const itogo_rab_po_dog_vtk_pod_krish_bez_fund =  itogo_rab_i_mat_po_dog_vtk + korobka_itogo_rab_bez_f +  mat_bez_chekov
+				// mat_bez_chekov NO
+				const itogo_rab_po_dog_vtk_pod_krish_bez_fund =  itogo_rab_i_mat_po_dog_vtk + korobka_itogo_rab_bez_f
+				// const itogo_rab_po_dog_vtk_pod_krish_bez_fund =  itogo_rab_i_mat_po_dog_vtk + korobka_itogo_rab_bez_f + mat_bez_chekov
 				const itogo_rab_po_dog_vtk_pod_krish_s_fund = itogo_rab_po_dog_vtk_pod_krish_bez_fund + sum1_7
 				
 				// const itogo_minus_sebest = itogo_rab_po_dog_vtk_pod_krish_s_fund - 

@@ -115,16 +115,17 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 				
 				// ЧАСТЬ 1 РАСЧЕТ
 				const korobka_itogo_rab = sum2_1 + sum4_1
-				const korobka_zp_tehno_bf = sum4_1 + sum3_1
-				const korob_itogo_mat_sn = Math.round(korobka_zp_tehno_bf * koef1)
+				const korobka_itogo_mat_bn =  sum3_1 + sum5_1
+				// const korobka_zp_tehno_bf = sum4_1 + sum3_1
+				const korob_itogo_mat_sn = Math.round(korobka_itogo_mat_bn * koef1)
 				const korob_raboty_rab = korobka_itogo_rab * 0.6
-				const korob_prib_s_mat = Math.round(korobka_zp_tehno_bf * koef1) - korobka_zp_tehno_bf
+				const korob_prib_s_mat = Math.round(korobka_itogo_mat_bn * koef1) - korobka_itogo_mat_bn
 				const korob_prib_s_rab = sum2_1 + sum4_1 - korob_raboty_rab
 				const korobka_itogo_rab_bez_f = sum2_1 + sum4_1 + korob_itogo_mat_sn
 				const korobka_itogo_rab_s_f = sum2_1 + sum4_1 + korob_itogo_mat_sn + sum1_7
 
-				const korob_korob_nalog_bf =  (sum2_1) + (sum4_1) + (korob_itogo_mat_sn) - (korobka_zp_tehno_bf) - (rashReal1)
-				const korob_nalog =  Math.round(korob_korob_nalog_bf * 0.075)
+				const korob_korob_nalog_bf =  korobka_itogo_rab + korob_itogo_mat_sn - korobka_itogo_mat_bn - rashReal1
+				const korob_nalog =  Math.round(korob_korob_nalog_bf * 0.15)
 				const korob_nalog_sf = (korob_nalog) + (sum1_9)
 
 				const korob_zp_magager_sf = Math.round(korobka_itogo_rab_s_f * 0.01)
@@ -132,8 +133,9 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 				const korob_zp_magager_bf = Math.round(korobka_itogo_rab_bez_f * 0.01)
 				const korob_zp_tehno_bf = Math.round(korobka_itogo_rab_bez_f * 0.01)
 
-				const prib_bez_fund = korobka_itogo_rab_bez_f - korob_nalog - rashReal1 - korob_raboty_rab - korobka_zp_tehno_bf - korob_zp_magager_bf - korob_zp_tehno_bf
-				const prib_s_fund = korobka_itogo_rab_s_f - korob_nalog_sf - rashReal1 - korob_raboty_rab - korobka_zp_tehno_bf - sum1_5 - korob_zp_magager_sf - korob_zp_tehno_sf
+				const prib_bez_fund = Math.round(korobka_itogo_rab_bez_f - korobka_itogo_mat_bn - korob_raboty_rab - rashReal1 - korob_nalog  )
+				const prib_s_fund = Math.round(korobka_itogo_rab_s_f - korobka_itogo_mat_bn - korob_raboty_rab - rashReal1 - korob_nalog_sf - sum1_1 - sum1_2 - sum1_3  )
+
 
 				// ФАСАД
 				/* 132? */ const sum6_1 = sumAll(positions.filter((pos: any) => pos.code == 6)) // Свесы кровли работы
@@ -162,6 +164,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 				// МЕЖК.ПЕРЕКРЫТИЯ
 				/* 311 */ const sum22_1 = sumAll(positions.filter((pos: any) => pos.code == 22)) // 22 Межкомнатные перегородки - работы
 				/* 324 */ const sum23_1 = sumAll(positions.filter((pos: any) => pos.code == 23)) // 23 Межкомнатные перегородки - Материалы
+				
 				// ИНЖ КОММ
 				const sum29_1 = sumAll(positions.filter((pos: any) => pos.code == 29)) // 29 Инженерные коммуникации
 
@@ -178,15 +181,21 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 				const nakladnie_itogo = sum24_1 + sum25_1 - sum26_1
 
 				// ЧАСТЬ 2 ИТОГО
+
+				// 27_1 работы антресоль
 				const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
-				const itogo_mat_v_tk_bn = sum23_1 + sum21_1 + sum19_1 + sum17_1 + sum15_1 + sum13_1 + sum11_1 + sum9_1 + sum7_1
+				// const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
+
+				// 29_1 инженерные коммуникации 28_1 материалы антресоль
+				const itogo_mat_v_tk_bn = sum29_1 + sum28_1 + sum23_1 + sum21_1 + sum19_1 + sum17_1 + sum15_1 + sum13_1 + sum11_1 + sum9_1 + sum7_1
+				// const itogo_mat_v_tk_bn = sum23_1 + sum21_1 + sum19_1 + sum17_1 + sum15_1 + sum13_1 + sum11_1 + sum9_1 + sum7_1
 				const itogo_mat_sn = Math.round(itogo_mat_v_tk_bn * koef2)
 				const mat_bez_chekov = nakladnie_itogo
 				const raboty_rabotnikov =  Math.round(itogo_rab_v_tk * 0.6)
 				const prib_s_mat = itogo_mat_sn - itogo_mat_v_tk_bn
 				const prib_s_rab = itogo_rab_v_tk - raboty_rabotnikov
 
-				const itogo_rab_i_mat_po_dog_vtk = itogo_rab_v_tk + itogo_mat_sn
+				const itogo_rab_i_mat_po_dog_vtk = itogo_rab_v_tk + itogo_mat_sn + mat_bez_chekov
 				const itogo_rab_po_dog_vtk_pod_krish_bez_fund =  itogo_rab_i_mat_po_dog_vtk + korobka_itogo_rab_bez_f +  mat_bez_chekov
 				const itogo_rab_po_dog_vtk_pod_krish_s_fund = itogo_rab_po_dog_vtk_pod_krish_bez_fund + sum1_7
 				
@@ -202,13 +211,13 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 				const summa_nalogoobl = itogo_rab_i_mat_po_dog_vtk - itogo_mat_v_tk_bn - rashReal2
 				const nalog = Math.round(summa_nalogoobl * 0.075)
 				const pribil_v_tk = itogo_rab_i_mat_po_dog_vtk - nalog - rashReal2 - itogo_mat_v_tk_bn - raboty_rabotnikov - mat_bez_chekov - zp_v_tk_manager - zp_v_tk_tehnodzor
-				const pribil_v_tk_pk_bf = pribil_v_tk + prib_bez_fund - zp_v_tk_manager - zp_v_tk_tehnodzor
-				const pribil_v_tk_pk_sf = pribil_v_tk + prib_s_fund - zp_v_tk_manager - zp_v_tk_tehnodzor
-				const sebest_v_tk_sf = sum1_5 + korobka_itogo_rab + korob_raboty_rab + rashReal1 + korob_nalog_sf + itogo_mat_v_tk_bn + mat_bez_chekov + raboty_rabotnikov + rashReal2 + nalog + zp_v_tk_manager_sf + zp_v_tk_tehnodzor_sf
-				const itogo_rabot_minus_sebest = itogo_rab_po_dog_vtk_pod_krish_s_fund - sebest_v_tk_sf
+				const pribil_v_tk_pk_bf = Math.round(pribil_v_tk + prib_bez_fund - zp_v_tk_manager - zp_v_tk_tehnodzor)
+				const pribil_v_tk_pk_sf = Math.round(pribil_v_tk + prib_s_fund - zp_v_tk_manager - zp_v_tk_tehnodzor)
+				const sebest_v_tk_sf = Math.round(sum1_5 + korobka_itogo_rab + korob_raboty_rab + rashReal1 + korob_nalog_sf + itogo_mat_v_tk_bn + mat_bez_chekov + raboty_rabotnikov + rashReal2 + nalog + zp_v_tk_manager_sf + zp_v_tk_tehnodzor_sf)
+				const itogo_rabot_minus_sebest = Math.round(itogo_rab_po_dog_vtk_pod_krish_s_fund - sebest_v_tk_sf)
 
 				setSums({ sum1_1, sum1_2, sum1_3, sum1_4, sum1_5, sum1_6, sum1_7, sum1_8, sum1_9, sum1_10, sum2_1, sum3_1, sum4_1, sum5_1, sum5_2, 
-					korobka_itogo_rab, korobka_zp_tehno_bf, korob_itogo_mat_sn, korob_raboty_rab, korob_prib_s_mat, korob_prib_s_rab, korobka_itogo_rab_bez_f, korobka_itogo_rab_s_f,
+					korobka_itogo_rab, korobka_itogo_mat_bn, korob_itogo_mat_sn, korob_raboty_rab, korob_prib_s_mat, korob_prib_s_rab, korobka_itogo_rab_bez_f, korobka_itogo_rab_s_f,
 					korob_korob_nalog_bf, korob_nalog, korob_nalog_sf, korob_zp_magager_sf, korob_zp_tehno_sf, korob_zp_magager_bf, korob_zp_tehno_bf, prib_bez_fund, prib_s_fund,
 					fasad_itogo, okna_itogo, perekr_itogo, mkperekr_itogo, nakladnie_itogo,
 					sum6_1, sum7_1, sum8_1, sum9_1, sum10_1, sum11_1, sum12_1, sum13_1, sum14_1, sum15_1, sum16_1, sum17_1, sum18_1, sum19_1, sum20_1, sum21_1, sum22_1, sum23_1, sum24_1, sum25_1, sum26_1, sum27_1, sum28_1,
@@ -216,8 +225,10 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					pribil_v_tk, nalog,  zp_v_tk_manager, zp_v_tk_tehnodzor, summa_nalogoobl, pribil_v_tk_pk_bf, pribil_v_tk_pk_sf, sebest_v_tk_sf, itogo_rabot_minus_sebest, zp_v_tk_manager_bf, zp_v_tk_tehnodzor_bf,
 					zp_v_tk_manager_sf, zp_v_tk_tehnodzor_sf, rashReal1, rashReal2, koef1, koef2, sum29_1
 					
-				 });
+				 }); 
+				 
 				};
+				
 				updateSums();
 				
 			}
@@ -283,7 +294,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '1_5')
 					return position && position.value > 0 ? (
-						<li key={position.id}>Оголовок - {position.value} {position.measure}.</li>
+						<li key={position.id}>Оголовок 200х200 мм - {position.value} {position.measure}.</li>
 					) : null;
 					})()}
 					
@@ -320,14 +331,14 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '3_3')
 					return position && position.value > 0 ? (
-						<li key={position.id+100}>Сечение бруса внешних стен {removeFirstTwoWords(position.name)}</li>
+						<li key={position.id+100}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '3_4')
 					return position && position.value > 0 ? (
-						<li key={position.id}>Сечение бруса внешних стен {removeFirstTwoWords(position.name)}</li>
+						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
@@ -490,18 +501,32 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					})()}
 
 					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '6_3')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '6_4')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '5_15')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Цвет на выбор ______________</li>
 					) : null;
 					})()}
 
-					{positions && (() => {
+					{/* {positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '7_4')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
-					})()}
+					})()} */}
 					</ul>
 					</>}
 
@@ -513,14 +538,14 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '8_1')
 					return position && position.value > 0 ? (
-						<li key={position.id}>Шлифовка на 2 слоя стен, столбов, перерубов</li>
+						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
 					{positions && (() => {
-					const position = positions.find((pos:any) => pos.fixed_id === '8_1')
+					const position = positions.find((pos:any) => pos.fixed_id === '8_2')
 					return position && position.value > 0 ? (
-						<li key={position.id}>Окраска на 2 слоя стен, столбов, перерубов</li>
+						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 					</ul>
@@ -618,7 +643,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 						<li>Цвет окраски на выбор _______________</li>
 					
 					{positions && (() => {
-					const position = positions.find((pos:any) => pos.fixed_id === '13_9')
+					const position = positions.find((pos:any) => pos.fixed_id === '15_15')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
 					) : null;
@@ -705,6 +730,13 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					})()}
 
 					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '17_2')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '17_14')
 					return position && position.value > 0 ? (
 						<li key={position.id}>Метизы, крепежи</li>
@@ -776,12 +808,12 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					) : null;
 					})()}
 
-					{positions && (() => {
+					{/* {positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '22_1')
 					return position && position.value > 0 ? (
 						<li key={position.id+100}>Каркас межкомнатных перегородок – доска сухая строганная 95х45 мм</li>
 					) : null;
-					})()}
+					})()} */}
 
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '22_2')
@@ -915,7 +947,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '20_4')
 					return position && position.value > 0 ? (
-						<li key={position.id}>{position.name}</li>
+						<li key={position.id}>123 {position.name}</li>
 					) : null;
 					})()}
 					
@@ -1082,8 +1114,27 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 						) : null;
 						})()}
 						</ul>
-						
-						{sums && <><p className='my-4 text-xl font-bold'><span className='ml-auto text-right float-right underline'>Итого: {sums.sum1_7
+
+						<div className='text-2xl py-4'>Накладные расходы</div>
+
+						{positions && sums &&
+						<ul className='list-decimal pb-4 pl-4 w-full'>
+							
+							{positions && sums.sum24_1 > 0 &&
+							<li className='my-4'>Доставка материалов <span className='ml-auto float-right underline'>Итого: {sums.sum24_1} руб.</span></li>
+							}
+							{positions && sums.sum25_1 > 0 &&
+							<li className='my-4'>Проживание, питание <span className='ml-auto float-right underline'>Итого: {sums.sum25_1} руб.</span></li>
+							}
+							{positions && sums.sum26_1 > 0 &&
+							<li className='my-4'>Скидки <span className='ml-auto float-right underline'>Итого: {sums.sum26_1} руб.</span></li>
+							}	
+						</ul>
+						}
+
+						{sums && <><p className='my-4 text-xl font-bold'><span className='ml-auto text-right float-right underline'>
+							Итого: {
+							sums.sum1_7
 							+ sums.sum2_1 + Math.round(sums.sum3_1 * sums.koef1)
 							+ sums.sum4_1 + Math.round(sums.sum5_1 * sums.koef1)
 							+ sums.sum6_1 + Math.round(sums.sum7_1 * sums.koef2)
@@ -1096,7 +1147,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 							+ sums.sum18_1 + Math.round(sums.sum19_1 * sums.koef2)
 							+ sums.sum20_1 + Math.round(sums.sum21_1 * sums.koef2)
 							+ sums.sum27_1 + Math.round(sums.sum28_1 * sums.koef2)
-							+ sums.sum29_1} руб.</span></p><br/></>}
+							+ Math.round(sums.sum29_1) + sums.nakladnie_itogo } руб.</span></p><br/></>}
 						<p className='my-8 text-xl text-center'>Доставка строительных материалов и разгрузка на участке  не включена в стоимость.<br/> Ориентировочная стоимость: 170 000 руб.</p>
 					</div>
 
