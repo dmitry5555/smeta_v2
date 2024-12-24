@@ -12,7 +12,8 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 	const [positions, setPositions] = useState<any | null>(null)
 	const [docKoefs, setDocKoefs] = useState<any | null>(null)
 	const [sums, setSums] = useState<any | null>(null)
-	
+	const [projectInfo, setProjectInfo] = useState<any | null>(null)
+
 	// const content = document.getElementById("content");
 
 	// function generateDocFromDiv() {
@@ -57,6 +58,8 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 			setDocKoefs(koefs)
 			// console.log(koefs)
 		    setPositions(data?.fields)
+			setProjectInfo(data)
+
 		};
 		fetchFields();
 	}, [proj_id]);
@@ -183,7 +186,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 				// ЧАСТЬ 2 ИТОГО
 
 				// 27_1 работы антресоль
-				const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
+				const itogo_rab_v_tk = sum27_1 + sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
 				// const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
 
 				// 29_1 инженерные коммуникации 28_1 материалы антресоль
@@ -279,7 +282,8 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 				<div id='content' className='text-md leading-5 flex flex-col py-4 w-full px-4'>
 
 					{/* Этап — Фундамент */}
-					<div className='mx-auto py-4 font-bold'>Комплектация дома.</div>
+					<div className='mx-auto py-4 font-bold text-center'>Приложение №1 к договору №{projectInfo && projectInfo.dog_num}
+						<br/>Комплектация жилого дома с учетом материалов и работ</div>
 					
 					{sums && 0<sums.sum1_1 && <>
 					<div className='font-bold'>Фундамент свайно-винтовой</div>
@@ -1133,6 +1137,10 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 							{sums && 0<sums.sum20_1 && <li className='my-4'>Чердачное перекрытие <span className='ml-auto float-right underline'>Итого по этапу: {sums.sum20_1 + Math.round(sums.sum21_1 * sums.koef2)} руб.</span></li>}
 							{sums && 0<sums.sum27_1 && <li className='my-4'>Антресольное перекрытие <span className='ml-auto float-right underline'>Итого по этапу: {sums.sum27_1 + Math.round(sums.sum28_1 * sums.koef2)} руб.</span></li>}		
 							{sums && 0<sums.sum29_1 && <li className='my-4'>Инженерные коммуникации </li>}
+							{positions && sums && (sums.sum24_1 + sums.sum25_1 - sums.sum26_1) > 0 &&
+								<li className='my-4'>Накладные расходы <span className='ml-auto float-right underline'>Итого: {sums.sum24_1 + sums.sum25_1 - sums.sum26_1} руб.</span></li>
+							}
+
 						</ul>
 					
 						<ul className='list-disc pl-4 w-full'>
@@ -1171,24 +1179,8 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 							<li key={position.id+200} className='my-4'>Теплый пол  <span className='ml-auto float-right underline'>Итого по этапу: {position.price * position.value} руб.</span></li>
 						) : null;
 						})()}
+												
 						</ul>
-
-						<div className='text-2xl py-4'>Накладные расходы</div>
-
-						{positions && sums &&
-						<ul className='list-decimal pb-4 pl-4 w-full'>
-							
-							{positions && sums.sum24_1 > 0 &&
-							<li className='my-4'>Доставка материалов <span className='ml-auto float-right underline'>Итого: {sums.sum24_1} руб.</span></li>
-							}
-							{positions && sums.sum25_1 > 0 &&
-							<li className='my-4'>Проживание, питание <span className='ml-auto float-right underline'>Итого: {sums.sum25_1} руб.</span></li>
-							}
-							{positions && sums.sum26_1 > 0 &&
-							<li className='my-4'>Скидки <span className='ml-auto float-right underline'>Итого: {sums.sum26_1} руб.</span></li>
-							}	
-						</ul>
-						}
 
 						{sums && <><p className='my-4 text-xl font-bold'><span className='ml-auto text-right float-right underline'>
 							Итого: {
@@ -1209,6 +1201,14 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 						<p className='my-8 text-xl text-center'>Доставка строительных материалов и разгрузка на участке  не включена в стоимость.<br/> Ориентировочная стоимость: 170 000 руб.</p>
 					</div>
 
+					<div className='flex flex-row italic '>
+						<div className='w-1/2'>Подрядчик:
+							<br/><br/><br/>___________________/Ульянов С.В./
+						</div>
+						<div className='w-1/2'>Заказчик:
+							<br/><br/><br/>___________________/{projectInfo && projectInfo.client}/
+						</div>
+					</div>
 				</div>
 
 			</div>

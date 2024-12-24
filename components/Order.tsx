@@ -585,7 +585,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 				// ЧАСТЬ 2 ИТОГО
 
 				// 27_1 работы антресоль
-				const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
+				const itogo_rab_v_tk =  sum27_1 + sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
 				// const itogo_rab_v_tk =  sum22_1 + sum20_1 + sum18_1 + sum16_1 + sum14_1 + sum12_1 + sum10_1 + sum8_1 + sum6_1
 
 				// 29_1 инженерные коммуникации 28_1 материалы антресоль
