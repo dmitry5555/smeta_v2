@@ -338,6 +338,8 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					) : null;
 					})()}
 
+
+
 					{/* {positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '3_3')
 					return position && position.value > 0 ? (
@@ -376,7 +378,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '2_4')
 					return position && position.value > 0 ? (
-						<li key={position.id}>Пружинные узлы</li>
+						<li key={position.id+100}>Пружинные узлы</li>
 					) : null;
 					})()}
 
@@ -396,10 +398,22 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '3_14')
-					const position2 = positions.find((pos:any) => pos.fixed_id === '3_15')
-					const position3 = positions.find((pos:any) => pos.fixed_id === '3_16')
-					return position && position.value + position2.value + position3.value > 0 ? (
-						<li key={position.id}>Лаги 1 этажа – доска сухая строганная, сечением 195/95х45 мм, +/- 3мм</li>
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '3_15')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '3_16')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
 					) : null;
 					})()}
 
@@ -744,6 +758,13 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 						<li key={position.id}>{getTillComa(position.name)}</li>
 					) : null;
 					})()}
+
+					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '17_11')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
 					
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '16_5')
@@ -840,6 +861,13 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					})()}
 
 					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '13_6')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '12_5')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
@@ -892,6 +920,13 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					})()}
 
 					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '23_5')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '23_7')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
@@ -940,13 +975,19 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					) : null;
 					})()}
 
-					{/* {positions && (() => {
-					const position = positions.find((pos:any) => pos.fixed_id === '19_3')
-					const position2 = positions.find((pos:any) => pos.fixed_id === '19_5')
-					return position && position.value + position2.value > 0 ? (
-						<li key={position.id}>Утеплитель Техноблок Стандарт или его аналоги</li>
+					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '19_7')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{getTillComa(position.name)}</li>
 					) : null;
-					})()} */}
+					})()}
+
+					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '19_3')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{getTillComa(position.name)}</li>
+					) : null;
+					})()}
 
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '19_9')
@@ -1018,6 +1059,13 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 						<li key={position.id}>{getTillComa(position.name)}</li>
 					) : null;
 					})()}
+
+					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '21_8')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{getTillComa(position.name)}</li>
+					) : null;
+					})()}
 					
 					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '21_10')
@@ -1052,6 +1100,13 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					const position2 = positions.find((pos:any) => pos.fixed_id === '28_6')
 					return position && position.value + position2.value > 0 ? (	
 						<li key={position.id}>{getTillComa(position.name)}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '28_7')
+					return position && position.value > 0 ? (
+						<li key={position.id+100}>{getTillComa(position.name)}</li>
 					) : null;
 					})()}
 
@@ -1198,7 +1253,7 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 							+ sums.sum20_1 + Math.round(sums.sum21_1 * sums.koef2)
 							+ sums.sum27_1 + Math.round(sums.sum28_1 * sums.koef2)
 							+ Math.round(sums.sum29_1) + sums.nakladnie_itogo } руб.</span></p><br/></>}
-						<p className='my-8 text-xl text-center'>Доставка строительных материалов и разгрузка на участке  не включена в стоимость.<br/> Ориентировочная стоимость: 170 000 руб.</p>
+						<p className='my-8 text-xl text-center'>{projectInfo && projectInfo.description}</p>
 					</div>
 
 					<div className='flex flex-row italic '>
