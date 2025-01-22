@@ -132,27 +132,28 @@ const Order = memo(({proj_id, user_id}: any) => {
 				if ((fixed_id === '3_1') && ['2_4'].includes(pos.fixed_id) ) {
 					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_14')
 					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_15')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_20')
 					// const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value }
+					return { ...pos, value: Math.round((value + pos2.value + pos3.value + pos4.value) * 100) / 100 }
 				}
 				if ((fixed_id === '3_14') && ['2_4'].includes(pos.fixed_id) ) {
 					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
 					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_15')
-					// const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value }
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_20')
+					return { ...pos, value: Math.round((value + pos2.value + pos3.value + pos4.value) * 100) / 100 }
 				}
 				if ((fixed_id === '3_15') && ['2_4'].includes(pos.fixed_id) ) {
 					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
 					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
-					// const pos4 = positions.find((pos: any) => pos.fixed_id === '3_16')
-					return { ...pos, value: value + pos2.value + pos3.value }
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_20')
+					return { ...pos, value: Math.round((value + pos2.value + pos3.value + pos4.value) * 100) / 100 }
 				}
-				// if ((fixed_id === '3_16') && ['2_4'].includes(pos.fixed_id) ) {
-				// 	const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
-				// 	const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
-				// 	const pos4 = positions.find((pos: any) => pos.fixed_id === '3_15')
-				// 	return { ...pos, value: value + pos2.value + pos3.value + pos4.value }
-				// }
+				if ((fixed_id === '3_20') && ['2_4'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
+					const pos3 = positions.find((pos: any) => pos.fixed_id === '3_14')
+					const pos4 = positions.find((pos: any) => pos.fixed_id === '3_15')
+					return { ...pos, value: Math.round((value + pos2.value + pos3.value + pos4.value) * 100) / 100 }
+				}
 				
 				// кровля стропилы + контробрешетки + обрешетки   -  в антисеп
 				// if ((fixed_id === '5_1') && ['4_11'].includes(pos.fixed_id) ) {
@@ -613,11 +614,16 @@ const Order = memo(({proj_id, user_id}: any) => {
 
 				// rashod_real
 				const summa_nalogoobl = itogo_rab_i_mat_po_dog_vtk - itogo_mat_v_tk_bn - rashReal2
-				const nalog = Math.round(summa_nalogoobl * 0.075)
-				const pribil_v_tk = itogo_rab_i_mat_po_dog_vtk - nalog - rashReal2 - itogo_mat_v_tk_bn - raboty_rabotnikov - mat_bez_chekov - zp_v_tk_manager - zp_v_tk_tehnodzor
-				const pribil_v_tk_pk_bf = Math.round(pribil_v_tk + prib_bez_fund - zp_v_tk_manager - zp_v_tk_tehnodzor)
-				const pribil_v_tk_pk_sf = Math.round(pribil_v_tk + prib_s_fund - zp_v_tk_manager - zp_v_tk_tehnodzor)
-				const sebest_v_tk_sf = Math.round(sum1_5 + korobka_itogo_rab + korob_raboty_rab + rashReal1 + korob_nalog_sf + itogo_mat_v_tk_bn + mat_bez_chekov + raboty_rabotnikov + rashReal2 + nalog + zp_v_tk_manager_sf + zp_v_tk_tehnodzor_sf)
+				// const nalog = Math.round(summa_nalogoobl * 0.075)
+				const nalog = Math.round(summa_nalogoobl * 0.15)
+				// const pribil_v_tk = itogo_rab_i_mat_po_dog_vtk - nalog - rashReal2 - itogo_mat_v_tk_bn - raboty_rabotnikov - mat_bez_chekov - zp_v_tk_manager - zp_v_tk_tehnodzor
+				const pribil_v_tk = itogo_rab_i_mat_po_dog_vtk - itogo_mat_v_tk_bn - nalog - rashReal2 - raboty_rabotnikov - mat_bez_chekov
+				// const pribil_v_tk_pk_bf = Math.round(pribil_v_tk + prib_bez_fund - zp_v_tk_manager - zp_v_tk_tehnodzor)
+				const pribil_v_tk_pk_bf = Math.round(pribil_v_tk + prib_bez_fund)
+				// const pribil_v_tk_pk_sf = Math.round(pribil_v_tk + prib_s_fund - zp_v_tk_manager - zp_v_tk_tehnodzor)
+				const pribil_v_tk_pk_sf = Math.round(pribil_v_tk + prib_s_fund)
+				// const sebest_v_tk_sf = Math.round(sum1_5 + korobka_itogo_rab + korob_raboty_rab + rashReal1 + korob_nalog_sf + itogo_mat_v_tk_bn + mat_bez_chekov + raboty_rabotnikov + rashReal2 + nalog + zp_v_tk_manager_sf + zp_v_tk_tehnodzor_sf)
+				const sebest_v_tk_sf = Math.round(sum1_5 + korobka_itogo_rab + korob_raboty_rab + rashReal1 + korob_nalog_sf + itogo_mat_v_tk_bn + mat_bez_chekov + raboty_rabotnikov + rashReal2 + nalog)
 				const itogo_rabot_minus_sebest = Math.round(itogo_rab_po_dog_vtk_pod_krish_s_fund - sebest_v_tk_sf)
 
 				setSums({ sum1_1, sum1_2, sum1_3, sum1_4, sum1_5, sum1_6, sum1_7, sum1_8, sum1_9, sum1_10, sum2_1, sum3_1, sum4_1, sum5_1, sum5_2, 

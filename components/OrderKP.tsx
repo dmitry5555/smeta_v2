@@ -332,6 +332,13 @@ const OrderKp = memo(({proj_id, user_id}: any) => {
 					})()}
 
 					{positions && (() => {
+					const position = positions.find((pos:any) => pos.fixed_id === '3_20')
+					return position && position.value > 0 ? (
+						<li key={position.id}>{position.name}</li>
+					) : null;
+					})()}
+
+					{positions && (() => {
 					const position = positions.find((pos:any) => pos.fixed_id === '3_3')
 					return position && position.value > 0 ? (
 						<li key={position.id}>{position.name}</li>
