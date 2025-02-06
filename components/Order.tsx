@@ -108,7 +108,12 @@ const Order = memo(({proj_id, user_id}: any) => {
 
 				// кл брус - 1 позиция
 				if ((fixed_id === '3_1') && ['2_1'].includes(pos.fixed_id) ) {
-					return { ...pos, value: value }
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_20')
+					return { ...pos, value: value + pos2.value }
+				}
+				if ((fixed_id === '3_20') && ['2_1'].includes(pos.fixed_id) ) {
+					const pos2 = positions.find((pos: any) => pos.fixed_id === '3_1')
+					return { ...pos, value: value + pos2.value }
 				}
 
 				// обвяз брус - 3 позиции, сумма
@@ -605,12 +610,15 @@ const Order = memo(({proj_id, user_id}: any) => {
 				const itogo_rab_po_dog_vtk_pod_krish_s_fund = itogo_rab_po_dog_vtk_pod_krish_bez_fund + sum1_7
 				
 				// const itogo_minus_sebest = itogo_rab_po_dog_vtk_pod_krish_s_fund - 
-					const zp_v_tk_manager = Math.round(itogo_rab_i_mat_po_dog_vtk * 0.01)
-					const zp_v_tk_tehnodzor = Math.round(itogo_rab_i_mat_po_dog_vtk * 0.01)
-					const zp_v_tk_manager_bf = Math.round(itogo_rab_po_dog_vtk_pod_krish_bez_fund * 0.01)
-					const zp_v_tk_tehnodzor_bf = Math.round(itogo_rab_po_dog_vtk_pod_krish_bez_fund * 0.01)
-					const zp_v_tk_manager_sf = Math.round(itogo_rab_po_dog_vtk_pod_krish_s_fund * 0.01)
-					const zp_v_tk_tehnodzor_sf = Math.round(itogo_rab_po_dog_vtk_pod_krish_s_fund * 0.01)
+				const zp_v_tk_manager_podkr_bf = Math.round(korobka_itogo_rab_bez_f * 0.01)
+				const zp_v_tk_technodzor_podkr_bf = Math.round(korobka_itogo_rab_bez_f * 0.01)
+				const zp_v_tk_manager_podkr_sf = Math.round(korobka_itogo_rab_s_f * 0.01)
+				const zp_v_tk_technodzor_podkr_sf = Math.round(korobka_itogo_rab_s_f * 0.01)
+
+				const zp_v_tk_manager_bf = Math.round(itogo_rab_po_dog_vtk_pod_krish_bez_fund * 0.01)
+				const zp_v_tk_tehnodzor_bf = Math.round(itogo_rab_po_dog_vtk_pod_krish_bez_fund * 0.01)
+				const zp_v_tk_manager_sf = Math.round(itogo_rab_po_dog_vtk_pod_krish_s_fund * 0.01)
+				const zp_v_tk_tehnodzor_sf = Math.round(itogo_rab_po_dog_vtk_pod_krish_s_fund * 0.01)
 
 				// rashod_real
 				const summa_nalogoobl = itogo_rab_i_mat_po_dog_vtk - itogo_mat_v_tk_bn - rashReal2
@@ -633,7 +641,7 @@ const Order = memo(({proj_id, user_id}: any) => {
 					fasad_itogo, okna_itogo, perekr_itogo, mkperekr_itogo, nakladnie_itogo,
 					sum6_1, sum7_1, sum8_1, sum9_1, sum10_1, sum11_1, sum12_1, sum13_1, sum14_1, sum15_1, sum16_1, sum17_1, sum18_1, sum19_1, sum20_1, sum21_1, sum22_1, sum23_1, sum24_1, sum25_1, sum26_1, sum27_1, sum28_1,
 					itogo_rab_v_tk, itogo_mat_v_tk_bn, itogo_mat_sn, mat_bez_chekov, raboty_rabotnikov, prib_s_mat, prib_s_rab, itogo_rab_i_mat_po_dog_vtk, itogo_rab_po_dog_vtk_pod_krish_bez_fund, itogo_rab_po_dog_vtk_pod_krish_s_fund,
-					pribil_v_tk, nalog,  zp_v_tk_manager, zp_v_tk_tehnodzor, summa_nalogoobl, pribil_v_tk_pk_bf, pribil_v_tk_pk_sf, sebest_v_tk_sf_new, itogo_rabot_minus_sebest, zp_v_tk_manager_bf, zp_v_tk_tehnodzor_bf,
+					pribil_v_tk, nalog,  zp_v_tk_manager_podkr_bf, zp_v_tk_technodzor_podkr_bf, zp_v_tk_manager_podkr_sf, zp_v_tk_technodzor_podkr_sf, summa_nalogoobl, pribil_v_tk_pk_bf, pribil_v_tk_pk_sf, sebest_v_tk_sf_new, itogo_rabot_minus_sebest, zp_v_tk_manager_bf, zp_v_tk_tehnodzor_bf,
 					zp_v_tk_manager_sf, zp_v_tk_tehnodzor_sf, rashReal1, rashReal2, koef1, koef2, sum29_1
 					
 				 }); 
@@ -2330,13 +2338,24 @@ const Order = memo(({proj_id, user_id}: any) => {
 					</div>}
 
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
-						<div className='w-9/12 my-auto text-right font-bold'>Зарплата в теплый контур менеджер :</div>
-						<div className='w-3/12 my-auto' id=''>{sums.zp_v_tk_manager}</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Зарплата менеджера под крышу без фундамента:</div>
+						<div className='w-3/12 my-auto' id=''>{sums.zp_v_tk_manager_podkr_bf}</div>
 					</div>
 					{user_id == 1 && <div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6 bg-slate-50' >
-						<div className='w-9/12 my-auto text-right font-bold'>Зарплата технодзора в теплый контур :</div>
-						<div className='w-3/12 my-auto' id=''>{sums.zp_v_tk_tehnodzor}</div>
+						<div className='w-9/12 my-auto text-right font-bold'>Зарплата технодзора под крышу без фундамента:</div>
+						<div className='w-3/12 my-auto' id=''>{sums.zp_v_tk_technodzor_podkr_bf}</div>
 					</div>}
+
+					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
+						<div className='w-9/12 my-auto text-right font-bold'>Зарплата менеджера под крышу с фундаментом:</div>
+						<div className='w-3/12 my-auto' id=''>{sums.zp_v_tk_manager_podkr_sf}</div>
+					</div>
+					{user_id == 1 && <div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6 bg-slate-50' >
+						<div className='w-9/12 my-auto text-right font-bold'>Зарплата технодзора под крышу с фундаментом:</div>
+						<div className='w-3/12 my-auto' id=''>{sums.zp_v_tk_technodzor_podkr_sf}</div>
+					</div>}
+
+
 					<div className='flex flex-row w-full px-5 py-4 border border-t-0 text-sm gap-6' >
 						<div className='w-9/12 my-auto text-right font-bold'>Зарплата менеджера теплый контур без фундамента:</div>
 						<div className='w-3/12 my-auto' id=''>{sums.zp_v_tk_manager_bf}</div>
